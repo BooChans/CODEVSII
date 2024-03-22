@@ -4,9 +4,11 @@
     <h1>{% block title %} Welcome to FlaskBlog {% endblock %}</h1>
     {% for i in range(len)%}
         <a href={{adress_list[i]}}>
-            <h2>{{ posts[i]['title'] }}</h2>
+            <h2>{{ velos[i]['id_velo'] }}</h2>
         </a>
-        <span class="badge badge-primary">{{ posts[i]['created'] }}</span>
+        <span class="badge badge-primary">{{ velos[i]['hauteur'] }}</span>
+        <span class="badge badge-primary">{{ velos[i]['longueur'] }}</span>
         <hr>
     {% endfor %}
 {% endblock %}
+

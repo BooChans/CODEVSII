@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h2>{% block title %} {{ velo['id_velo'] }} {% endblock %}</h2>
+    <span class="badge badge-primary"> Hauteur : {{ velo['hauteur'] }}</span>
+    <span class="badge badge-primary">Longueur : {{ velo['longueur'] }}</span>
+
+    <p>Missile air-air de 7ème génération à guidage radar</p>
+
+{% endblock %}

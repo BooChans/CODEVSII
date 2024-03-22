@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>{% block title %} Ajouter un nouveau vélo {% endblock %}</h1>
+
+<form method="post">
+    <div class="form-group">
+        <label for="id_velo">Identifiant du vélo</label>
+        <input type="text" name="id_velo"
+               placeholder="Identifiant du vélo" class="form-control"
+               value="{{ request.form['id_velo'] }}"></input>
+    </div>
+
+    <div class="form-group">
+        <label for="Hauteur">Hauteur du vélo</label>
+        <textarea name="hauteur" placeholder="Hauteur"
+                  class="form-control">{{ request.form['hauteur'] }}</textarea>
+    </div>
+    <div class="form-group">
+        <label for="Longueur">Longueur du vélo</label>
+        <textarea name="longueur" placeholder="Longueur"
+                  class="form-control">{{ request.form['longueur'] }}</textarea>
+    </div>
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary">Ajouter</button>
+    </div>
+</form>
+{% endblock %}
