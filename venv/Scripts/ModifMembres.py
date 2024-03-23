@@ -14,16 +14,18 @@ def get_profil(login):
     profil = cur.execute("SELECT * FROM Membres WHERE login=?", (login,)).fetchone()
     return profil
 
-def ajouter_membre(login, mdp, identifiant, mail):
+def ajouter_membre(login, mdp, mail):
     connection = sqlite3.connect('BDD_velos.db')
 
     cur = connection.cursor()
-    cur.execute("SELECT id_membre FROM Membres WHERE id_membre=?", (identifiant,))
-    existing_id = cur.fetchone()
-    if existing_id:
-        print(f"L'identifiant {identifiant} existe déjà dans la table Membres.")
+    cur.execute("SELECT login FROM Membres WHERE login=?", (login))
+    existing_login = cur.fetchone()
+    if existing_login:
+        print(f"Le login {login} existe déjà dans la table Membres.")
     else:
-        cur.execute("INSERT INTO Membres (id_membre, login, password, mail) VALUES (?, ?, ?, ?)", (identifiant, login, mdp, mail))
+        cur.execute("SELECT COUNT(id_membre) FROM Membres")
+        c = cur.fetchone()
+        cur.execute("INSERT INTO Membres (id_membre, login, password, mail) VALUES (?, ?, ?, ?)", ((c+1), login, mdp, mail))
         connection.commit()
         print(f"Le membre avec l'identifiant {identifiant} a été ajouté avec succès.")
         connection.close()
@@ -50,7 +52,6 @@ def affiche_profil(login):
     print("vos informations : \n")
     print("identifiant : ",a, "\n")
     print("login : ",b,  "\n") 
-    print("mot de passe : ",c, "\n")
     print("mail : ",d," \n")  
 
 supprimer_membre("BaoChau TRAN",123,"baochau@mail.com")
