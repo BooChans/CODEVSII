@@ -11,8 +11,9 @@ def get_profil(login):
     cur = connection.cursor()
     cur.row_factory = sqlite3.Row
 
-    profil = cur.execute("SELECT * FROM Membres WHERE login=?", (login,)).fetchone()
-    return profil
+    profil = cur.execute("SELECT * FROM Membres WHERE login=?", (login)).fetchone()
+    a,b,_,d = profil
+    return a,b,d
 
 def ajouter_membre(login, mdp, mail):
     connection = sqlite3.connect('BDD_velos.db')
@@ -48,11 +49,11 @@ def changer_mdp(login, mdp, new_mdp):
 
 
 def affiche_profil(login):
-    a,b,c,d= get_profil(login)
+    a,b,c= get_profil(login)
     print("vos informations : \n")
     print("identifiant : ",a, "\n")
     print("login : ",b,  "\n") 
-    print("mail : ",d," \n")  
+    print("mail : ",c," \n")  
 
 supprimer_membre("BaoChau TRAN",123,"baochau@mail.com")
 connection.commit()
