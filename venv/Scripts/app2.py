@@ -67,16 +67,17 @@ def about():
 @app.route('/add_velo', methods = ('GET','POST'))
 def add_velo():
     if request.method == 'POST':
-        id_velo = int(request.form['id_velo'])
         hauteur = int(request.form['hauteur'])
         longueur = int(request.form['longueur'])
-        if not id_velo:
-            flash('id_vélo est nécéssaire')
+        if not hauteur and not longueur:
+            flash('la taille est nécéssaire')
         
         else:
             try:
                 conn = get_db_connection()
-                conn.execute('INSERT INTO Velos (id_velo,hauteur, longueur, disponibilite) VALUES (?,?,?,?)', (id_velo,hauteur,longueur,True))
+                conn.execute("SELECT COUNT(id_membre) FROM Membres")
+                c = cur.fetchone()
+                conn.execute('INSERT INTO Velos (id_velo,hauteur, longueur, disponibilite) VALUES (?,?,?,?)', ((c+1),hauteur,longueur,True))
                 conn.commit()
                 conn.close()
                 s.sendto(bytes(f"Le vélo {id_velo} a été ajouté, de hauteur {hauteur} et de longueur {longueur}","utf-8"), (UDP_IP, UDP_PORT))
