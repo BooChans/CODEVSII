@@ -2,6 +2,8 @@ import sqlite3
 from flask import Flask, render_template, request, url_for, flash, redirect
 from werkzeug.exceptions import abort
 import socket
+import ModifMembres as memb
+
 
 UDP_IP = "127.0.0.1"
 UDP_PORT = 2390
@@ -82,3 +84,32 @@ def add_velo():
             except:
                 flash('nope')
     return render_template('aj_velo.html')
+
+@app.route('/add_member',methods=('GET','POST'))
+def add_member():
+    if request.method == 'POST':
+        login = request.form['login']
+        mdp = request.form['mdp']
+        mail = request.form['mail']
+        identifiant = int(request.form['identifiant'])
+        if not login:
+            flash('id_vélo est nécéssaire')        
+        else:
+            try:
+                print('hi')
+                memb.ajouter_membre(login,mdp,identifiant,mail)
+            except:
+                flash('nope')
+    return render_template('aj_membres.html')
+
+@app.route('/profil', methods=('GET','POST'))
+def show_profil():
+    if request.method == 'POST': 
+        login=request.form['login']
+        profil = memb.get_profil(login)
+        if profil is not None:
+            return render_template('aff_prof.html', profil=profil)
+        else: 
+            abort(404)
+    return render_template('dem_log.html')
+
