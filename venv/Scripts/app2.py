@@ -91,13 +91,12 @@ def add_member():
         login = request.form['login']
         mdp = request.form['mdp']
         mail = request.form['mail']
-        identifiant = int(request.form['identifiant'])
         if not login:
-            flash('id_vélo est nécéssaire')        
+            flash('login est nécéssaire')        
         else:
             try:
                 print('hi')
-                memb.ajouter_membre(login,mdp,identifiant,mail)
+                memb.ajouter_membre(login,mdp,mail)
             except:
                 flash('nope')
     return render_template('aj_membres.html')
