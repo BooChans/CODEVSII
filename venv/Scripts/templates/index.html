@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h1>{% block title %} Welcome to FlaskBlog {% endblock %}</h1>
+    <h1>{% block title %} Liste des vélos {% endblock %}</h1>
     {% for i in range(len)%}
         <a href={{adress_list[i]}}>
             <h2>{{ velos[i]['id_velo'] }}</h2>
