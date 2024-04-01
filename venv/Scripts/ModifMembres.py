@@ -13,8 +13,8 @@ def get_profil(login):
     cur.row_factory = sqlite3.Row
 
     profil = cur.execute("SELECT * FROM Membres WHERE login=?", (login)).fetchone()
-    a,b,_,d = profil
-    return a,b,d
+    _,a,_,b = profil
+    return a,b
 
 def ajouter_membre(login, mdp, mail):
     connection = sqlite3.connect('BDD_velos.db')
@@ -42,18 +42,22 @@ def supprimer_membre(login, mdp, mail):
         print("Aucun membre correspondant trouvé.")
 
 def changer_mdp(login, mdp, new_mdp):
-    cur.execute("UPDATE Membres SET password=? WHERE login=? AND password=?", (new_mdp, login, mdp))
-    connection.commit()
-    if cur.rowcount > 0:
-        print("Mot de passe changé avec succès.")
+    cur.execute("SELECT password FROM Membres WHERE login=?", (login,))
+    existing_password = cur.fetchone()
+    if existing_password:
+        if check_password_hash(existing_password[0], mdp):
+            new_mdp_hash = generate_password_hash(new_mdp).decode('utf-8')
+            cur.execute("UPDATE Membres SET password=? WHERE login=? AND password=?", (new_mdp_hash, login, mdp))
+            connection.commit()
+            print("Mot de passe changé avec succès.")
+        else:
+            print("Mot de passe incorrect.")
     else:
-        print("Aucun utilisateur correspondant trouvé ou mot de passe incorrect.")
-
+        print("Aucun utilisateur correspondant trouvé.")
 
 def affiche_profil(login):
-    a,b,c= get_profil(login)
+    b,c= get_profil(login)
     print("vos informations : \n")
-    print("identifiant : ",a, "\n")
     print("login : ",b,  "\n") 
     print("mail : ",c," \n")  
 
