@@ -12,23 +12,23 @@
   </head>
   <body>
     <nav class="navbar navbar-expand-md navbar-light bg-light">
-        <a class="navbar-brand" href="{{ url_for('index')}}">FlaskBlog</a>
+        <a class="navbar-brand" href="{{ url_for('main.index')}}">FlaskBlog</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
             <li class="nav-item active">
-                <a class="nav-link" href="{{ url_for('about')}}">About</a>
+                <a class="nav-link" href="{{ url_for('main.about')}}">About</a>
             </li>
             <li class="nav-item active">
-              <a class="nav-link" href="{{ url_for('add_velo')}}">Ajouter un vélo</a>
+              <a class="nav-link" href="{{ url_for('main.add_velo')}}">Ajouter un vélo</a>
           </li>
           <li class="nav-item active">
-            <a class="nav-link" href="{{ url_for('show_profil')}}">Profil</a>
+            <a class="nav-link" href="{{ url_for('main.show_profil')}}">Profil</a>
         </li>
         <li class="nav-item active">
-          <a class="nav-link" href="{{ url_for('add_member')}}">Ajouter un membre</a>
+          <a class="nav-link" href="{{ url_for('main.add_member')}}">Ajouter un membre</a>
       </li>
             </ul>
         </div>
