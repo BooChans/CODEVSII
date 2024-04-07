@@ -25,13 +25,18 @@ def ajouter_membre(login, mdp, mail):
     if existing_login:
         print(f"Le login {login} existe déjà dans la table Membres.")
     else:
-        mdp_hache = flask.generate_password_hash(mdp).decode('utf-8')
-        cur.execute("SELECT COUNT(id_membre) FROM Membres")
-        c = cur.fetchone()
-        cur.execute("INSERT INTO Membres (id_membre, login, password, mail) VALUES (?, ?, ?, ?)", ((c+1), login, mdp_hache, mail))
-        connection.commit()
-        print(f"Le membre avec l'identifiant {c+1} a été ajouté avec succès.")
-        connection.close()
+        cur.execute("SELECT mail FROM Membres WHERE login=?", (mail))
+        existing_mail = cur.fetchone()
+        if existing_mail:
+            print(f"Le mail {mail} existe déjà dans la table Membres.")
+        else:
+            mdp_hache = flask.generate_password_hash(mdp).decode('utf-8')
+            cur.execute("SELECT COUNT(id_membre) FROM Membres")
+            c = cur.fetchone()
+            cur.execute("INSERT INTO Membres (id_membre, login, password, mail) VALUES (?, ?, ?, ?)", ((c+1), login, mdp_hache, mail))
+            connection.commit()
+            print(f"Le membre avec l'identifiant {c+1} a été ajouté avec succès.")
+            connection.close()
 
 def supprimer_membre(login, mdp, mail):
     cur.execute("DELETE FROM Membres WHERE login=? AND password=? AND mail=?", (login, mdp, mail))
