@@ -35,7 +35,7 @@ def index():
     conn = get_db_connection()
     velos = conn.execute('SELECT * FROM Velos').fetchall()
     conn.close()
-    adress_list=[url_for('index')+str(velos[i]['id_velo']) for i in range(len(velos))]
+    adress_list=["http://127.0.0.1:5000/"+str(velos[i]['id_velo']) for i in range(len(velos))]
     return render_template('index.html', len=len(velos), velos=velos, adress_list=adress_list)
 
 @app.route('/<int:post_id>')
@@ -73,16 +73,17 @@ def add_velo():
             flash('la taille est nécéssaire')
         
         else:
-            
-            conn = get_db_connection()
-            c= conn.cursor().execute("SELECT COUNT(*) FROM Velos").fetchone()
-            print(c)
-            conn.execute('INSERT INTO Velos (id_velo,hauteur, longueur, disponibilite) VALUES (?,?,?,?)', (c[0]+1000,hauteur,longueur,True))
-            conn.commit()
-            conn.close()
-            s.sendto(bytes(f"Le vélo {c[0]+1000} a été ajouté, de hauteur {hauteur} et de longueur {longueur}","utf-8"), (UDP_IP, UDP_PORT))
-            return redirect(url_for('index'))
-
+            try:
+                conn = get_db_connection()
+                conn.execute("SELECT COUNT(id_membre) FROM Membres")
+                c = cur.fetchone()
+                conn.execute('INSERT INTO Velos (id_velo,hauteur, longueur, disponibilite) VALUES (?,?,?,?)', ((c+1),hauteur,longueur,True))
+                conn.commit()
+                conn.close()
+                s.sendto(bytes(f"Le vélo {id_velo} a été ajouté, de hauteur {hauteur} et de longueur {longueur}","utf-8"), (UDP_IP, UDP_PORT))
+                return redirect(url_for('index'))
+            except:
+                flash('nope')
     return render_template('aj_velo.html')
 
 @app.route('/add_member',methods=('GET','POST'))
@@ -95,11 +96,10 @@ def add_member():
             flash('login est nécéssaire')        
         else:
             try:
+                print('hi')
                 memb.ajouter_membre(login,mdp,mail)
-                return redirect(url_for('index'))
-            except: 
+            except:
                 flash('nope')
-
     return render_template('aj_membres.html')
 
 @app.route('/profil', methods=('GET','POST'))

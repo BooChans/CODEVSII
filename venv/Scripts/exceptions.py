@@ -1,6 +1,6 @@
-def MembreExistedeja(login, mail):
-  raise Exception("Le membre " + login + " ou l'email " + mail + " existe déjà !")
+def MembreExistedeja(login):
+  return Exception("le membre" + login + " existe déjà")
 
 def Membrenexistepas(login):
-  raise Exception("Le membre " + login + "n'existe pas")
+  return Exception("le membre" + login + "n'existe pas")
 
