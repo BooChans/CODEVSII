@@ -30,7 +30,7 @@ def ajouter_membre(login, mdp, mail):
         if existing_mail:
             print(f"Le mail {mail} existe déjà dans la table Membres.")
         else:
-            mdp_hache = flask.generate_password_hash(mdp).decode('utf-8')
+            mdp_hache = flask.generate_password_hash(mdp).encode('utf-8')
             cur.execute("SELECT COUNT(id_membre) FROM Membres")
             c = cur.fetchone()
             cur.execute("INSERT INTO Membres (id_membre, login, password, mail) VALUES (?, ?, ?, ?)", ((c+1), login, mdp_hache, mail))
