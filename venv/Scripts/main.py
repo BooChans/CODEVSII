@@ -4,6 +4,7 @@ from werkzeug.exceptions import abort
 from werkzeug.security import generate_password_hash,check_password_hash
 import socket
 from .ModifMembres import ajouter_membre, get_profil
+from flask_login import current_user
 
 main = Blueprint('main', __name__)
 
@@ -115,3 +116,9 @@ def show_profil():
             abort(404)
     return render_template('dem_log.html')
 
+@main.route('/profile')
+def profile():
+    try: 
+        return render_template('aff_profile.html', login=current_user.login, mail=current_user.mail)
+    except: 
+        return redirect(url_for('auth.login'))

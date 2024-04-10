@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>{% block title %} Vos informations {{ login }}{% endblock %}</h1>
+<span class="badge badge-primary"> Login : {{ login }}</span>
+<span class="badge badge-primary"> Mail : {{ mail }}</span>
+
+
+{% endblock %}

@@ -14,9 +14,8 @@ def get_profil(login):
     cur = connection.cursor()
     cur.row_factory = sqlite3.Row
 
-    profil = cur.execute("SELECT * FROM Membres WHERE login=?", (login)).fetchone()
-    _,a,_,b = profil
-    return a,b
+    profil = cur.execute("SELECT * FROM Membres WHERE login=?", (login,)).fetchone()
+    return profil
 
 def ajouter_membre(login, mdp, mail):
     connection = sqlite3.connect('BDD_velos.db')
