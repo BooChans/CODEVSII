@@ -6,6 +6,7 @@ import socket
 from .ModifMembres import ajouter_membre, get_profil
 from flask_login import current_user
 from flask_session import Session
+from .reservations import reserver_velo
 
 
 main = Blueprint('main', __name__)
@@ -43,20 +44,18 @@ def index():
     adress_list=[url_for('main.index')+str(velos[i]['id_velo']) for i in range(len(velos))]
     return render_template('index.html', len=len(velos), velos=velos, adress_list=adress_list)
 
-@main.route('/<int:post_id>')
+@main.route('/<int:post_id>',methods=['GET','POST'])
 def post(post_id):
     velo = get_post(post_id)
-    return render_template('page_information_velo.html', velo=velo)
-
-@main.route('/<int:post_id>', methods=['POST'])
-def post_post(post_id):
-    velo = get_post(post_id)
-
-    if request.method == 'POST':
-        print("hi2")
-        session['velo']=velo['id_velo']
-        return redirect(url_for('booking.book'))
-    return render_template('page_information_velo.html', velo=velo)
+    if request.method == "POST":
+        action = request.form['action'].split()
+        if action[0] == "book":
+            try: 
+                reserver_velo(action[1],current_user.id_membre, action[2])
+                return render_template('success_book.html',date=action[2])
+            except:
+                return redirect(url_for('main.index'))
+    return render_template('page_information_velo.html', velo=velo, date=session['date'])
     
 
 @main.route('/create', methods=('GET', 'POST'))

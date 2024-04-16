@@ -23,7 +23,6 @@ def login():
         else: 
             profil = get_profil(login)
             user = Membres.query.filter_by(login=login).first()
-            print(user)
             if not check_password_hash(profil['password'], mdp):
                 flash("L'identifiant ou le mot de passe ne sont pas bons")
             else:

@@ -9,6 +9,11 @@
         <span class="badge badge-primary">{{ velos[i]['hauteur'] }}</span>
         <span class="badge badge-primary">{{ velos[i]['longueur'] }}</span>
         <hr>
+        <form method = "post">
+        <div class="form-group">
+            <button class="btn btn-primary" name = "action" type="submit" value="book {{velos[i]['id_velo']}} {{date}}">Réserver</button>
+        </div>
+    </form>
     {% endfor %}
 {% endblock %}
 

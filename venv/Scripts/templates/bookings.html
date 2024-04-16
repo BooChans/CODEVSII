@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>{% block title %} Liste des réservations {% endblock %}</h1>
+    {% for i in range(len)%}
+            <h2>{{ bookings[i]['date_deb'] }}</h2>
+        <span class="badge badge-primary">{{ bookings[i]['id_velo'] }}</span>
+        <hr>
+        <form method="post">
+            <div class="form-group">
+            <button class="btn btn-primary" name = "action" type="submit" value="remove {{bookings[i]['date_deb']}}">Supprimer la réservation</button>
+        </div>
+        <div class="form-group">
+            <button class="btn btn-primary" name = "action" type="submit" value="see_code {{bookings[i]['date_deb']}}">Voir le code confidentiel</button>
+        </div>
+        </form>
+    {% endfor %}
+{% endblock %}

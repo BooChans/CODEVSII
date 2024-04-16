@@ -85,10 +85,18 @@ def supprimer_reservation(id_membre,date_deb):
     cur.execute("DELETE FROM reservations WHERE id_membre = ? and date_deb = ?", (id_membre,date_deb))
     connection.commit()
 
-def afficher_code(id_membre,id_velo,date_deb):
+def afficher_code(id_membre,date_deb):
     connection = sqlite3.connect('BDD_velos.db')
     cur = connection.cursor()
     cur.row_factory = sqlite3.Row
-    cur.execute("SELECT code from reservations WHERE id_member = ? and id_velo = ? and date_deb = ?",(id_membre,id_velo,date_deb))
-    code_booking=cur.fetchone[0]['code']
+    cur.execute("SELECT code from reservations WHERE id_membre = ? and date_deb = ?",(id_membre,date_deb))
+    code_booking=cur.fetchone()[0]
     return code_booking
+
+def reservationsencours(id_membre):
+    connection = sqlite3.connect('BDD_velos.db')
+    cur = connection.cursor()
+    cur.row_factory = sqlite3.Row
+    cur.execute("SELECT * from reservations WHERE id_membre = ?",(id_membre,))
+    bookings=cur.fetchall()
+    return bookings
