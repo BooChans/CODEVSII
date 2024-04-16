@@ -1,6 +1,8 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
+from flask_session import Session
+
 
 db=SQLAlchemy()
 # init SQLAlchemy so we can use it later in our models
@@ -30,5 +32,12 @@ def create_app():
     # blueprint for non-auth parts of app
     from .main import main as main_blueprint
     app.register_blueprint(main_blueprint)
+
+    from .booking import booking as booking_blueprint
+    app.register_blueprint(booking_blueprint)
+
+    app.config["SESSION_PERMANENT"] = False
+    app.config["SESSION_TYPE"] = "filesystem"
+    Session(app)
 
     return app

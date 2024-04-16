@@ -7,7 +7,7 @@
 {% with messages = get_flashed_messages() %}
 {% if messages %}
     <div class="badge badge-primary">
-        {{ messages[0] }}. Go to <a href="{{ url_for('auth.login') }}">Login post</a>.
+        {{ messages[0] }}. Go to <a href="{{ url_for('auth.changepassword') }}">Login post</a>.
     </div>
 {% endif %}
 {% endwith %}
@@ -28,14 +28,18 @@
                placeholder="Mot de passe" class="form-control"
                value="{{ request.form['mdp'] }}"></input>
     </div>
-    <div class="form-check">
-        <input class="form-check-input" type="checkbox" id="remember" name="remember">
-        <label class="form-check-label">Se souvenir de moi</label>
-      </div>
+
+    
     <div class="form-group">
-        <button type="submit" class="btn btn-primary">Se connecter</button>
+        <label for="title">Nouveau mot de passe</label>
+        <input type="text" name="new_mdp"
+               placeholder="Nouveau mot de passe" class="form-control"
+               value="{{ request.form['new_mdp'] }}"></input>
+    </div>
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary">Confirmer</button>
     </div>
 </form>
-<a class="btn btn-primary" href="{{ url_for('auth.changepassword') }}" role = "button">Changer son mot de passe</a>
+
 
 {% endblock %}

@@ -43,12 +43,15 @@ def supprimer_membre(login, mdp, mail):
         print("Aucun membre correspondant trouvé.")
 
 def changer_mdp(login, mdp, new_mdp):
+    connection = sqlite3.connect('BDD_velos.db')
+
+    cur = connection.cursor()
     cur.execute("SELECT password FROM Membres WHERE login=?", (login,))
     existing_password = cur.fetchone()
     if existing_password:
         if check_password_hash(existing_password[0], mdp):
-            new_mdp_hash = str(generate_password_hash(new_mdp),'utf-8')
-            cur.execute("UPDATE Membres SET password=? WHERE login=? AND password=?", (new_mdp_hash, login, mdp))
+            new_mdp_hash = generate_password_hash(new_mdp)
+            cur.execute("UPDATE Membres SET password=? WHERE login=?", (new_mdp_hash, login))
             connection.commit()
             print("Mot de passe changé avec succès.")
         else:

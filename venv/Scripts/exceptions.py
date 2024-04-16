@@ -4,3 +4,6 @@ def MembreExistedeja(login, mail):
 def Membrenexistepas(login):
   raise Exception("Le membre " + login + "n'existe pas")
 
+def Reservationdejaprise(login):
+  raise Exception("L'utilisateur a déjà réservé un vélo pour la journée")
+

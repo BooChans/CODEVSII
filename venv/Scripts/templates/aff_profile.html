@@ -4,6 +4,7 @@
 <h1>{% block title %} Vos informations {{ login }}{% endblock %}</h1>
 <span class="badge badge-primary"> Login : {{ login }}</span>
 <span class="badge badge-primary"> Mail : {{ mail }}</span>
-
-
+<div>
+    <a class="btn btn-primary" href="{{ url_for('auth.changepassword') }}" role = "button">Changer son mot de passe</a>
+</div>
 {% endblock %}

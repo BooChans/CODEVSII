@@ -1,8 +1,10 @@
 from flask import Blueprint,render_template, redirect, url_for, request, flash
-from .ModifMembres import ajouter_membre,get_profil
+from .ModifMembres import ajouter_membre,get_profil,changer_mdp
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, logout_user, current_user
 from .models import Membres
+from flask_session import Session
+
 
 auth = Blueprint('auth', __name__)
 
@@ -12,7 +14,6 @@ def login():
         login = request.form['login']
         mdp = request.form['mdp']
         remember = True if request.form.get('remember') else False
-        print(remember)
         if not login:
             flash('Le login doit être donné')
             return render_template("login.html")
@@ -22,6 +23,7 @@ def login():
         else: 
             profil = get_profil(login)
             user = Membres.query.filter_by(login=login).first()
+            print(user)
             if not check_password_hash(profil['password'], mdp):
                 flash("L'identifiant ou le mot de passe ne sont pas bons")
             else:
@@ -59,3 +61,25 @@ def signup_post():
 def logout():
     logout_user()
     return redirect(url_for('main.index'))
+
+@auth.route('/changepassword',methods=['GET','POST'])
+def changepassword():
+    if request.method == 'POST':
+        login = request.form['login']
+        mdp = request.form['mdp']
+        new_mdp = request.form['new_mdp']
+        if not login: 
+            flash('Le login est nécessaire')
+        elif not mdp: 
+            flash('Le mot de passe est nécessaire')
+        elif not new_mdp:
+            flash('Le nouveau mot de passe est nécessaire')
+        else: 
+
+            profil = get_profil(login)
+            changer_mdp(profil['login'],mdp,new_mdp)
+            
+        return redirect(url_for('main.index'))
+    return render_template('changepass.html')
+
+                

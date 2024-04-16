@@ -1,10 +1,12 @@
 import sqlite3
-from flask import Flask, render_template, request, url_for, flash, redirect, Blueprint
+from flask import Flask, render_template, request, url_for, flash, redirect, Blueprint,session
 from werkzeug.exceptions import abort
 from werkzeug.security import generate_password_hash,check_password_hash
 import socket
 from .ModifMembres import ajouter_membre, get_profil
 from flask_login import current_user
+from flask_session import Session
+
 
 main = Blueprint('main', __name__)
 
@@ -45,6 +47,17 @@ def index():
 def post(post_id):
     velo = get_post(post_id)
     return render_template('page_information_velo.html', velo=velo)
+
+@main.route('/<int:post_id>', methods=['POST'])
+def post_post(post_id):
+    velo = get_post(post_id)
+
+    if request.method == 'POST':
+        print("hi2")
+        session['velo']=velo['id_velo']
+        return redirect(url_for('booking.book'))
+    return render_template('page_information_velo.html', velo=velo)
+    
 
 @main.route('/create', methods=('GET', 'POST'))
 def create():
