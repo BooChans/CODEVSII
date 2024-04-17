@@ -48,12 +48,8 @@ def velos_disponibles(date_deb):
     date_fin = date_deb_dt + datetime.timedelta(days=1)
     
     cur.execute("""
-        SELECT *
-        FROM Velos
-        WHERE id_velo NOT IN (
-            SELECT id_velo
-            FROM reservations
-            WHERE date_fin >= ? AND date_deb <= ?
+        SELECT * FROM Velos
+        WHERE statut = 'Disponible'
         )
     """, (date_deb, date_fin))
     
