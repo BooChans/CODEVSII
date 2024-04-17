@@ -27,6 +27,7 @@ cur.execute("""CREATE TABLE Reservations(
     id_res INTEGER PRIMARY KEY AUTOINCREMENT,
     id_membre INTEGER,
     id_velo INTEGER,
+    code INTEGER,
     date_deb DATETIME,
     date_fin DATETIME,
     FOREIGN KEY (id_velo) REFERENCES Velos(id_velo),
