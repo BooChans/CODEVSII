@@ -32,8 +32,8 @@ def reserver_velo(id_velo, id_membre, date_deb):
         num_booking = cur.fetchone()[0]
         if num_booking == 0: 
             code = generate_unique_code()
-            cur.execute("INSERT INTO reservations ( id_membre, id_velo, date_deb, date_fin, code) VALUES ( ?, ?, ?, ?, ?)",
-                        (id_membre, id_velo, date_deb, date_fin.strftime('%Y-%m-%d'), code))
+            cur.execute("INSERT INTO reservations ( id_membre, id_velo, code, date_deb, date_fin) VALUES ( ?, ?, ?, ?, ?)",
+                        (id_membre, id_velo, code,  date_deb, date_fin.strftime('%Y-%m-%d')))
             connection.commit()
         else: 
             Reservationdejaprise(id_membre)
