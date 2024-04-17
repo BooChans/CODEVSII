@@ -20,8 +20,8 @@ cur.execute("INSERT INTO Velos (hauteur, longueur, statut) VALUES (?,?,?)",(50,1
 cur.execute("INSERT INTO Velos (hauteur, longueur, statut) VALUES (?,?,?)",(60,120,'Disponible'))
 
 
-cur.execute("INSERT INTO Reservations (id_membre,id_velo,date_deb,date_fin) VALUES (?,?,?,?)",(1,2,'2024-04-18','2024-04-19'))
-cur.execute("INSERT INTO Reservations (id_membre,id_velo,date_deb,date_fin) VALUES (?,?,?,?)",(3,3,'2024-04-18','2024-04-19'))
+cur.execute("INSERT INTO Reservations (id_membre,id_velo, code, date_deb,date_fin) VALUES (?,?,?,?,?)",(1,2, 4524,'2024-04-18','2024-04-19'))
+cur.execute("INSERT INTO Reservations (id_membre,id_velo, code, date_deb,date_fin) VALUES (?,?,?,?,?)",(3,3, 5654, '2024-04-18','2024-04-19'))
 
 
 cur.execute("INSERT INTO Historique (id_membre,id_velo,date_deb,date_fin) VALUES (?,?,?,?)",(1,2,'2024-04-18','2024-04-19'))
