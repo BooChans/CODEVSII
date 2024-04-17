@@ -30,3 +30,8 @@ cur.execute("INSERT INTO Historique (id_membre,id_velo,date_deb,date_fin) VALUES
 cur.execute("INSERT INTO Historique (id_membre,id_velo,date_deb,date_fin) VALUES (?,?,?,?)",(4,3,'2024-04-17','2024-04-18'))
 cur.execute("INSERT INTO Historique (id_membre,id_velo,date_deb,date_fin) VALUES (?,?,?,?)",(5,4,'2024-04-17','2024-04-18'))
 cur.execute("INSERT INTO Historique (id_membre,id_velo,date_deb,date_fin) VALUES (?,?,?,?)",(6,5,'2024-04-17','2024-04-18'))
+
+connection.commit()
+
+# Close the connection
+connection.close()
