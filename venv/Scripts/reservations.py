@@ -93,6 +93,14 @@ def afficher_code(id_membre,date_deb):
     code_booking=cur.fetchone()[0]
     return code_booking
 
+def velo_est_disponible(id_velo):
+    connection = sqlite3.connect('BDD_velos.db')
+    cur = connection.cursor()
+    cur.row_factory = sqlite3.Row
+    cur.execute("SELECT disponibilite FROM Velos WHERE id_velo = ?", (id_velo))
+    b = cur.fetchone()
+    return b[0]
+    
 def reservationsencours(id_membre):
     connection = sqlite3.connect('BDD_velos.db')
     cur = connection.cursor()
