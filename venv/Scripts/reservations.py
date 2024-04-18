@@ -31,8 +31,10 @@ def reserver_velo(id_velo, id_membre, date_deb):
         cur.execute("SELECT COUNT(*) FROM reservations WHERE id_membre = ? and date_deb = ?", (id_membre,date_deb))
         num_booking = cur.fetchone()[0]
         if num_booking == 0: 
+            cur.execute("INSERT INTO Historique ( id_membre, id_velo, date_deb, date_fin) VALUES ( ?, ?, ?, ?, ?)",
+                        (id_membre, id_velo,  date_deb, date_fin.strftime('%Y-%m-%d')))
             code = generate_unique_code()
-            cur.execute("INSERT INTO reservations ( id_membre, id_velo, code, date_deb, date_fin) VALUES ( ?, ?, ?, ?, ?)",
+            cur.execute("INSERT INTO Reservations ( id_membre, id_velo, code, date_deb, date_fin) VALUES ( ?, ?, ?, ?, ?)",
                         (id_membre, id_velo, code,  date_deb, date_fin.strftime('%Y-%m-%d')))
             connection.commit()
         else: 
@@ -78,14 +80,15 @@ def supprimer_reservations_date_depassee():
 def supprimer_reservation(id_membre,date_deb):
     connection = sqlite3.connect('BDD_velos.db')
     cur = connection.cursor()
-    cur.execute("DELETE FROM reservations WHERE id_membre = ? and date_deb = ?", (id_membre,date_deb))
+    cur.execute("DELETE FROM Historique WHERE id_membre = ? and date_deb = ?", (id_membre,date_deb))
+    cur.execute("DELETE FROM Reservations WHERE id_membre = ? and date_deb = ?", (id_membre,date_deb))
     connection.commit()
 
 def afficher_code(id_membre,date_deb):
     connection = sqlite3.connect('BDD_velos.db')
     cur = connection.cursor()
     cur.row_factory = sqlite3.Row
-    cur.execute("SELECT code from reservations WHERE id_membre = ? and date_deb = ?",(id_membre,date_deb))
+    cur.execute("SELECT code from Reservations WHERE id_membre = ? and date_deb = ?",(id_membre,date_deb))
     code_booking=cur.fetchone()[0]
     return code_booking
 
@@ -102,6 +105,6 @@ def reservationsencours(id_membre):
     connection = sqlite3.connect('BDD_velos.db')
     cur = connection.cursor()
     cur.row_factory = sqlite3.Row
-    cur.execute("SELECT * from reservations WHERE id_membre = ?",(id_membre,))
+    cur.execute("SELECT * from Reservations WHERE id_membre = ?",(id_membre,))
     bookings=cur.fetchall()
     return bookings
