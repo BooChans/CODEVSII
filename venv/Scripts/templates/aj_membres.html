@@ -16,19 +16,24 @@
 <form method="post">
 
     <div class="form-group">
-        <label for="Hauteur">Mot de passe du membre</label>
-        <textarea name="mdp" placeholder="Mot de passe"
-                  class="form-control">{{ request.form['mdp'] }}</textarea>
+        <label for="title">Pseudonyme</label>
+        <input type="text" name="login"
+               placeholder="Pseudonyme" class="form-control"></input>
+
+    <div class="form-group">
+        <label for="title">Mail</label>
+        <input type="text" name="mail"
+                       placeholder="Mail" class="form-control"></input>
     </div>
     <div class="form-group">
-        <label for="Mail">Mail du membre</label>
-        <textarea name="mail" placeholder="Mail"
-                  class="form-control">{{ request.form['mail'] }}</textarea>
+        <label for="title">Mot de passe</label>
+        <input type="text" name="mdp"
+               placeholder="Mot de passe" class="form-control"></input>
     </div>
     <div class="form-group">
-        <label for="Login">Login du membre</label>
-        <textarea name="login" placeholder="Login"
-                  class="form-control">{{ request.form['login'] }}</textarea>
+        <label for="title">Numéro de téléphone</label>
+        <input type="text" name="numero_tel"
+               placeholder="Numéro de téléphone" class="form-control"></input>
     </div>
     <div class="form-group">
         <button type="submit" class="btn btn-primary">Ajouter</button>

@@ -82,22 +82,20 @@ def about():
 @main.route('/add_velo', methods = ('GET','POST'))
 def add_velo():
     if request.method == 'POST':
-        hauteur = int(request.form['hauteur'])
-        longueur = int(request.form['longueur'])
-        if not hauteur and not longueur:
-            flash('la taille est nécéssaire')
-        
-        else:
-            
+        hauteur =request.form['hauteur']
+        longueur = request.form['longueur']
+        statut = request.form['status']
+        if not hauteur and not longueur and not statut:
+            flash("La taille et l'état sont nécéssaires")        
+        else:            
             conn = get_db_connection()
             c= conn.cursor().execute("SELECT COUNT(*) FROM Velos").fetchone()
             print(c)
-            conn.execute('INSERT INTO Velos (id_velo,hauteur, longueur, disponibilite) VALUES (?,?,?,?)', (c[0]+1000,hauteur,longueur,True))
+            conn.execute('INSERT INTO Velos (id_velo,hauteur, longueur, statut) VALUES (?,?,?,?)', (c[0]+1000,hauteur,longueur,statut))
             conn.commit()
             conn.close()
             s.sendto(bytes(f"Le vélo {c[0]+1000} a été ajouté, de hauteur {hauteur} et de longueur {longueur}","utf-8"), (UDP_IP, UDP_PORT))
             return redirect(url_for('main.index'))
-
     return render_template('aj_velo.html')
 
 @main.route('/add_member',methods=('GET','POST'))
@@ -106,6 +104,7 @@ def add_member():
         login = request.form['login']
         mdp = request.form['mdp']
         mail = request.form['mail']
+        phone_number = request.form['phone_number']
         if not login:
             flash('login est nécéssaire')        
         else:
@@ -131,6 +130,6 @@ def show_profil():
 @main.route('/profile')
 def profile():
     try: 
-        return render_template('aff_profile.html', login=current_user.login, mail=current_user.mail)
+        return render_template('aff_profile.html', login=current_user.login, mail=current_user.mail,numero_tel=current_user.numero_tel)
     except: 
         return redirect(url_for('auth.login'))

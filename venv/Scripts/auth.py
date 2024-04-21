@@ -1,7 +1,7 @@
 from flask import Blueprint,render_template, redirect, url_for, request, flash
 from .ModifMembres import ajouter_membre,get_profil,changer_mdp
 from werkzeug.security import generate_password_hash, check_password_hash
-from flask_login import login_user, logout_user, current_user
+from flask_login import login_user, logout_user, current_user,login_required
 from .models import Membres
 from flask_session import Session
 
@@ -39,18 +39,21 @@ def signup_post():
         login = request.form['login']
         mdp = request.form['mdp']
         mail = request.form['mail']
+        numero_tel = request.form['numero_tel']
         if not login:
             flash('Le login est nécéssaire')  
         elif not mdp: 
             flash('Le mot de passe est nécessaire')
         elif not mail: 
             flash('Le mail doit être fourni')
+        elif not numero_tel:
+            flash('Le numéro de téléphone doit être fourni')      
         else:
             try:
-                ajouter_membre(login,mdp,mail)
+                ajouter_membre(login,mdp,mail,numero_tel)
                 return redirect(url_for('main.index'))
             except: 
-                flash("Le pseudonyme ou l'adresse mail saisie est déjà utilisé")
+                flash("Le pseudonyme ou l'adresse mail ou le numéro de téléphone saisi est déjà utilisé")
 
         return render_template('aj_membres.html')
 
@@ -62,6 +65,7 @@ def logout():
     return redirect(url_for('main.index'))
 
 @auth.route('/changepassword',methods=['GET','POST'])
+@login_required
 def changepassword():
     if request.method == 'POST':
         login = request.form['login']

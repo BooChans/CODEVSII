@@ -13,23 +13,22 @@ def get_profil(login):
 
     cur = connection.cursor()
     cur.row_factory = sqlite3.Row
-
     profil = cur.execute("SELECT * FROM Membres WHERE login=?", (login,)).fetchone()
     return profil
 
-def ajouter_membre(login, mdp, mail):
+def ajouter_membre(login, mdp, mail,numero_tel):
     connection = sqlite3.connect('BDD_velos.db')
 
     cur = connection.cursor()
-    cur.execute("SELECT login FROM Membres WHERE login=? OR mail = ?", (login,mail))
+    cur.execute("SELECT login FROM Membres WHERE login=? OR mail = ? OR numero_tel=?" , (login,mail,numero_tel))
     existing_login = cur.fetchone()
     if existing_login:
-        return MembreExistedeja(login,mail)
+        return MembreExistedeja(login,mail,numero_tel)
     else:
         mdp_hache = generate_password_hash(mdp)
         cur.execute("SELECT COUNT(id_membre) FROM Membres")
         c = cur.fetchone()
-        cur.execute("INSERT INTO Membres (id_membre, login, password, mail) VALUES (?, ?, ?, ?)", ((c[0]+10000), login, mdp_hache, mail))
+        cur.execute("INSERT INTO Membres (id_membre, login, password, mail,numero_tel) VALUES (?, ?, ?, ?,?)", ((c[0]+10000), login, mdp_hache, mail,numero_tel))
         connection.commit()
         print(f"Le membre avec l'identifiant {c[0]+1} a été ajouté avec succès.")
         connection.close()

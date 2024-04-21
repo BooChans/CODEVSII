@@ -6,6 +6,7 @@ class Membres(UserMixin,db.Model):
     login = db.Column(db.String(1000), unique=True)
     password = db.Column(db.String(100))
     mail = db.Column(db.String(100), unique=True)
+    numero_tel = db.Column(db.String(100),unique=True)
     def get_id(self):
         return(self.id_membre)
 
