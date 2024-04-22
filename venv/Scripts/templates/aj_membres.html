@@ -7,7 +7,7 @@
 {% with messages = get_flashed_messages() %}
 {% if messages %}
     <div class="badge badge-primary">
-        {{ messages[0] }}. Go to <a href="{{ url_for('auth.signup_post') }}">Signup post</a>.
+        {{ messages[0] }}. 
     </div>
 {% endif %}
 {% endwith %}
@@ -29,6 +29,11 @@
         <label for="title">Mot de passe</label>
         <input type="text" name="mdp"
                placeholder="Mot de passe" class="form-control"></input>
+    </div>
+    <div class="form-group">
+        <label for="title">Confirmez votre mot de passe</label>
+        <input type="text" name="omdp"
+               placeholder="Confirmez votre mot de passe" class="form-control"></input>
     </div>
     <div class="form-group">
         <label for="title">Numéro de téléphone</label>

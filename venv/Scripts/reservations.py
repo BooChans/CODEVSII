@@ -73,9 +73,10 @@ def supprimer_reservations_date_depassee():
     connection = sqlite3.connect('BDD_velos.db')
     cur = connection.cursor()
    
-    date_actuelle = datetime.date.today().strftime('%x %X')
+    date_actuelle = datetime.datetime.now().strftime('%Y-%m-%d %X')
+    print(date_actuelle)
     
-    cur.execute("DELETE FROM reservations WHERE date_fin < ?", (date_actuelle,))
+    cur.execute("DELETE FROM Reservations WHERE date_fin < ?", (date_actuelle,))
     connection.commit()
 
 def supprimer_reservation(id_membre,date_deb):

@@ -1,6 +1,14 @@
 {% extends 'base.html' %}
 
 {% block content %}
+
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <div class="badge badge-primary">
+            {{ messages[0] }}.
+        </div>
+    {% endif %}
+    {% endwith %}
     <h1>{% block title %} Liste des vélos {% endblock %}</h1>
     {% for i in range(len)%}
         <a href="{{url_for('main.index')}}{{velos[i]['id_velo']}}">

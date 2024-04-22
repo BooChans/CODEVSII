@@ -58,6 +58,7 @@ def bookcancel():
 @booking.route('/bookings',methods=['GET','POST'])
 @login_required
 def bookings():
+    supprimer_reservations_date_depassee()
     bookings=reservationsencours(current_user.id_membre)
     if request.method == 'POST':
         codes=codes_list()

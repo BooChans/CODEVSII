@@ -13,7 +13,11 @@ cur.execute("""CREATE TABLE Membres(
     login TEXT UNIQUE NOT NULL,
     password TEXT NOT NULL,
     mail TEXT UNIQUE NOT NULL,
-    numero_tel TEXT UNIQUE NOT NULL
+    numero_tel TEXT UNIQUE NOT NULL,
+    is_admin BOOLEAN NOT NULL DEFAULT FALSE,
+    is_confirmed BOOLEAN NOT NULL DEFAULT FALSE, 
+    registered_on DATETIME NOT NULL,
+    confirmed_on DATETIME
 )""")
 
 cur.execute("""CREATE TABLE Velos(
@@ -40,6 +44,8 @@ cur.execute("""CREATE TABLE Historique(
     id_velo INTEGER,
     date_deb DATETIME,
     date_fin DATETIME,
+    date_recup DATETIME,
+    date_remise DATETIME,
     FOREIGN KEY(id_res) REFERENCES Reservations(id_res),
     FOREIGN KEY(id_velo) REFERENCES Velos(id_velo),
     FOREIGN KEY(id_membre) REFERENCES Membres(id_membre) 

@@ -55,7 +55,7 @@ def post(post_id):
                 return render_template('success_book.html',date=action[2])
             except:
                 return redirect(url_for('main.index'))
-    return render_template('page_information_velo.html', velo=velo, date=session['date'])
+    return render_template('page_information_velo.html', velo=velo)
     
 
 @main.route('/create', methods=('GET', 'POST'))
@@ -90,11 +90,9 @@ def add_velo():
         else:            
             conn = get_db_connection()
             c= conn.cursor().execute("SELECT COUNT(*) FROM Velos").fetchone()
-            print(c)
-            conn.execute('INSERT INTO Velos (id_velo,hauteur, longueur, statut) VALUES (?,?,?,?)', (c[0]+1000,hauteur,longueur,statut))
+            conn.execute('INSERT INTO Velos (id_velo,hauteur, longueur, statut) VALUES (?,?,?,?)', (c[0],hauteur,longueur,statut))
             conn.commit()
             conn.close()
-            s.sendto(bytes(f"Le vélo {c[0]+1000} a été ajouté, de hauteur {hauteur} et de longueur {longueur}","utf-8"), (UDP_IP, UDP_PORT))
             return redirect(url_for('main.index'))
     return render_template('aj_velo.html')
 

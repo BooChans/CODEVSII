@@ -2,7 +2,7 @@ import sqlite3
 import flask
 from werkzeug.security import generate_password_hash, check_password_hash
 from .exceptions import MembreExistedeja, Membrenexistepas
-
+import datetime
 
 connection = sqlite3.connect('BDD_velos.db')
 
@@ -16,7 +16,7 @@ def get_profil(login):
     profil = cur.execute("SELECT * FROM Membres WHERE login=?", (login,)).fetchone()
     return profil
 
-def ajouter_membre(login, mdp, mail,numero_tel):
+def ajouter_membre(login, mdp, mail,numero_tel, registered_on):
     connection = sqlite3.connect('BDD_velos.db')
 
     cur = connection.cursor()
@@ -28,7 +28,7 @@ def ajouter_membre(login, mdp, mail,numero_tel):
         mdp_hache = generate_password_hash(mdp)
         cur.execute("SELECT COUNT(id_membre) FROM Membres")
         c = cur.fetchone()
-        cur.execute("INSERT INTO Membres (id_membre, login, password, mail,numero_tel) VALUES (?, ?, ?, ?,?)", ((c[0]+10000), login, mdp_hache, mail,numero_tel))
+        cur.execute("INSERT INTO Membres (id_membre, login, password, mail,numero_tel,registered_on) VALUES (?, ?, ?, ?,?,?)", ((c[0]), login, mdp_hache, mail,numero_tel,registered_on))
         connection.commit()
         print(f"Le membre avec l'identifiant {c[0]+1} a été ajouté avec succès.")
         connection.close()
@@ -64,6 +64,13 @@ def affiche_profil(login):
     print("login : ",b,  "\n") 
     print("mail : ",c," \n") 
 
+def confirm(mail):
+    connection = sqlite3.connect('BDD_velos.db')
+
+    cur = connection.cursor()
+    confirmed_on = datetime.datetime.now().strftime('%Y-%m-%d %X')
+    cur.execute("UPDATE Membres SET confirmed_on = ? , is_confirmed = True WHERE mail = ?", (confirmed_on,mail))
+    connection.commit()
 
 connection.commit()
 connection.close()
