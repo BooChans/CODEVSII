@@ -2,7 +2,7 @@ import sqlite3
 import flask
 import random
 import datetime
-from .exceptions import Reservationdejaprise,Dejareserve
+from .exceptions import Reservationdejaprise
 
 connection = sqlite3.connect('BDD_velos.db')
 cur = connection.cursor()
@@ -16,44 +16,42 @@ def generate_unique_code():
         if cur.fetchone()[0] == 0:
             return code
 
-def reserver_velo(id_velo, id_membre, date_deb,date_end):
+def reserver_velo(id_velo, id_membre, date_deb):
     connection = sqlite3.connect('BDD_velos.db')
     cur = connection.cursor()
-
+    date_deb_dt = datetime.datetime.strptime(date_deb, '%Y-%m-%d')
+    date_fin = date_deb_dt + datetime.timedelta(days=1)
     
-    cur.execute("SELECT COUNT(*) FROM reservations WHERE id_velo = ? AND date_fin > ? AND date_deb < ?", (id_velo, date_deb, date_end))
+    cur.execute("SELECT COUNT(*) FROM reservations WHERE id_velo = ? AND date_fin > ? AND date_deb < ?", (id_velo, date_deb, date_fin))
     num_overlapping_reservations = cur.fetchone()[0]
     
     if num_overlapping_reservations > 0:
         print("Ce vélo est déjà réservé pour cette période")
-        Dejareserve()
     else:
         cur.execute("SELECT COUNT(*) FROM reservations WHERE id_membre = ? and date_deb = ?", (id_membre,date_deb))
         num_booking = cur.fetchone()[0]
         if num_booking == 0: 
-            cur.execute("INSERT INTO Historique ( id_membre, id_velo, date_deb, date_fin) VALUES ( ?, ?, ?, ?)",
-                        (id_membre, id_velo,  date_deb, date_end))
             code = generate_unique_code()
-            cur.execute("INSERT INTO Reservations ( id_membre, id_velo, code, date_deb, date_fin) VALUES ( ?, ?, ?, ?, ?)",
-                        (id_membre, id_velo, code,  date_deb,date_end))
+            cur.execute("INSERT INTO reservations ( id_membre, id_velo, date_deb, date_fin, code) VALUES ( ?, ?, ?, ?, ?)",
+                        (id_membre, id_velo, date_deb, date_fin.strftime('%Y-%m-%d'), code))
             connection.commit()
         else: 
             Reservationdejaprise(id_membre)
-
             
 
-def velos_disponibles(date_deb,date_fin):
+def velos_disponibles(date_deb):
 
     connection = sqlite3.connect('BDD_velos.db')
     cur = connection.cursor()
     cur.row_factory = sqlite3.Row
-
+    date_deb_dt = datetime.datetime.strptime(date_deb, '%Y-%m-%d')
+    date_fin = date_deb_dt + datetime.timedelta(days=1)
     
-    cur.execute("""SELECT * FROM Velos WHERE statut = 'Disponible' and id_velo NOT IN (
-            SELECT id_velo
-            FROM reservations
-            WHERE date_fin > ? AND date_deb < ?
-        )""", (date_deb, date_fin))
+    cur.execute("""
+        SELECT * FROM Velos
+        WHERE statut = 'Disponible'
+        )
+    """, (date_deb, date_fin))
     
     velos_disponibles = cur.fetchall()
     
@@ -66,73 +64,44 @@ def velos_disponibles(date_deb,date_fin):
         return velos
     else:
         print("Aucun vélo disponible pour la date:", date_deb)
-        return []
 
 
 def supprimer_reservations_date_depassee():
     connection = sqlite3.connect('BDD_velos.db')
     cur = connection.cursor()
    
-    date_actuelle = datetime.datetime.now().strftime('%Y-%m-%d %X')
-    print(date_actuelle)
+    date_actuelle = datetime.date.today().strftime('%Y-%m-%d')
     
-    cur.execute("DELETE FROM Reservations WHERE date_fin < ?", (date_actuelle,))
+    cur.execute("DELETE FROM reservations WHERE date_fin < ?", (date_actuelle,))
     connection.commit()
+
 
 def supprimer_reservation(id_membre,date_deb):
     connection = sqlite3.connect('BDD_velos.db')
     cur = connection.cursor()
-    cur.execute("DELETE FROM Historique WHERE id_membre = ? and date_deb = ?", (id_membre,date_deb))
-    cur.execute("DELETE FROM Reservations WHERE id_membre = ? and date_deb = ?", (id_membre,date_deb))
+    cur.execute("DELETE FROM reservations WHERE id_membre = ? and date_deb = ?", (id_membre,date_deb))
     connection.commit()
 
 def afficher_code(id_membre,date_deb):
     connection = sqlite3.connect('BDD_velos.db')
     cur = connection.cursor()
     cur.row_factory = sqlite3.Row
-    cur.execute("SELECT code from Reservations WHERE id_membre = ? and date_deb = ?",(id_membre,date_deb))
+    cur.execute("SELECT code from reservations WHERE id_membre = ? and date_deb = ?",(id_membre,date_deb))
     code_booking=cur.fetchone()[0]
     return code_booking
 
-def velo_est_disponible(id_velo):
+def statut_velo(id_velo):
     connection = sqlite3.connect('BDD_velos.db')
     cur = connection.cursor()
     cur.row_factory = sqlite3.Row
     cur.execute("SELECT statut FROM Velos WHERE id_velo = ?", (id_velo))
-    b = cur.fetchone()[0]
-    return b == 'Disponible'
-
-
+    b = cur.fetchone()
+    return b[0]
+    
 def reservationsencours(id_membre):
     connection = sqlite3.connect('BDD_velos.db')
     cur = connection.cursor()
     cur.row_factory = sqlite3.Row
-    cur.execute("SELECT * from Reservations WHERE id_membre = ?",(id_membre,))
+    cur.execute("SELECT * from reservations WHERE id_membre = ?",(id_membre,))
     bookings=cur.fetchall()
     return bookings
-
-
-def afficher_historique_user(id_membre):
-    connection = sqlite3.connect('BDD_velos.db')
-    cur = connection.cursor()
-    cur.row_factory = sqlite3.Row
-    cur.execute("SELECT * from Historique WHERE id_membre = ?",(id_membre,))
-    history_u=cur.fetchall()
-    return history_u
-
-
-def afficher_historique_user(id_velo):
-    connection = sqlite3.connect('BDD_velos.db')
-    cur = connection.cursor()
-    cur.row_factory = sqlite3.Row
-    cur.execute("SELECT * from Historique WHERE id_velo = ?",(id_velo,))
-    history_b=cur.fetchall()
-    return history_b
-
-def codes_list():
-    connection = sqlite3.connect('BDD_velos.db')
-    cur = connection.cursor()
-    cur.row_factory = sqlite3.Row
-    cur.execute("SELECT id_velo,code from Reservations")
-    codes=cur.fetchall()
-    return [(code['id_velo'],code['code']) for code in codes]
