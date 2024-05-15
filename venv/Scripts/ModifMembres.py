@@ -34,6 +34,7 @@ def ajouter_membre(login, mdp, mail,numero_tel, registered_on):
         connection.close()
 
 def supprimer_membre(login, mdp, mail):
+    effacer_historique_membre(login);
     cur.execute("DELETE FROM Membres WHERE login=? AND password=? AND mail=?", (login, mdp, mail))
     connection.commit()
     if cur.rowcount > 0:
