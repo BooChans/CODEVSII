@@ -14,6 +14,7 @@ def get_profil(login):
     cur = connection.cursor()
     cur.row_factory = sqlite3.Row
     profil = cur.execute("SELECT * FROM Membres WHERE login=?", (login,)).fetchone()
+    connection.close()
     return profil
 
 def ajouter_membre(login, mdp, mail,numero_tel, registered_on):
@@ -23,6 +24,7 @@ def ajouter_membre(login, mdp, mail,numero_tel, registered_on):
     cur.execute("SELECT login FROM Membres WHERE login=? OR mail = ? OR numero_tel=?" , (login,mail,numero_tel))
     existing_login = cur.fetchone()
     if existing_login:
+        connection.close()
         return MembreExistedeja(login,mail,numero_tel)
     else:
         mdp_hache = generate_password_hash(mdp)
@@ -34,13 +36,14 @@ def ajouter_membre(login, mdp, mail,numero_tel, registered_on):
         connection.close()
 
 def supprimer_membre(login, mdp, mail):
-    effacer_historique_membre(login);
     cur.execute("DELETE FROM Membres WHERE login=? AND password=? AND mail=?", (login, mdp, mail))
     connection.commit()
     if cur.rowcount > 0:
         print("Membre supprimé avec succès.")
+
     else:
         print("Aucun membre correspondant trouvé.")
+    connection.close()
 
 def changer_mdp(login, mdp, new_mdp):
     connection = sqlite3.connect('BDD_velos.db')
@@ -58,6 +61,22 @@ def changer_mdp(login, mdp, new_mdp):
             print("Mot de passe incorrect.")
     else:
         print("Aucun utilisateur correspondant trouvé.")
+    connection.close()
+
+def changer_mdp_oublie(login, new_mdp):
+    connection = sqlite3.connect('BDD_velos.db')
+
+    cur = connection.cursor()
+    cur.execute("SELECT * FROM Membres WHERE login=?", (login,))
+    existing = cur.fetchone()
+    if existing:
+        new_mdp_hash = generate_password_hash(new_mdp)
+        cur.execute("UPDATE Membres SET password=? WHERE login=?", (new_mdp_hash, login))
+        connection.commit()
+        print("Mot de passe changé avec succès.")
+    else:
+        print("Aucun utilisateur correspondant trouvé.")
+    connection.close()
 
 def affiche_profil(login):
     b,c= get_profil(login)
@@ -72,6 +91,7 @@ def confirm(mail):
     confirmed_on = datetime.datetime.now().strftime('%Y-%m-%d %X')
     cur.execute("UPDATE Membres SET confirmed_on = ? , is_confirmed = True WHERE mail = ?", (confirmed_on,mail))
     connection.commit()
+    connection.close()
 
 connection.commit()
 connection.close()

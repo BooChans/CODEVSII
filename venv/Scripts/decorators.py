@@ -13,3 +13,21 @@ def logout_required(func):
         return func(*args, **kwargs)
 
     return decorated_function
+
+def admin_required(func):
+    @wraps(func)
+    def decorated_function(*args,**kwargs):
+        if not current_user.is_admin:
+            flash("Vous ne pouvez pas accéder à cette page")
+            return redirect(url_for('main.index'))
+        return func(*args,**kwargs)
+    return decorated_function
+
+def confirmed_required(func):
+    @wraps(func)
+    def decorated_function(*args,**kwargs):
+        if not current_user.is_confirmed:
+            flash("Vous ne pouvez pas accéder à cette page, il faut vous confirmer")
+            return redirect(url_for('auth.resend_confirmation'))
+        return func(*args,**kwargs)
+    return decorated_function

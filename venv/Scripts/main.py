@@ -6,8 +6,8 @@ import socket
 from .ModifMembres import ajouter_membre, get_profil
 from flask_login import current_user
 from flask_session import Session
-from .reservations import reserver_velo
-
+from .reservations import reserver_velo,supprimer_reservation,afficher_code,supprimer_reservations_date_depassee,velos_disponibles,tableau_de_bord
+import datetime
 
 main = Blueprint('main', __name__)
 
@@ -38,11 +38,11 @@ def get_post(id_velo):
 
 @main.route('/')
 def index():
-    conn = get_db_connection()
-    velos = conn.execute('SELECT * FROM Velos').fetchall()
-    conn.close()
-    adress_list=[url_for('main.index')+str(velos[i]['id_velo']) for i in range(len(velos))]
-    return render_template('index.html', len=len(velos), velos=velos, adress_list=adress_list)
+    #conn = get_db_connection()
+    #velos = conn.execute('SELECT * FROM Velos').fetchall()
+    #conn.close()
+    #adress_list=[url_for('main.index')+str(velos[i]['id_velo']) for i in range(len(velos))]
+    return render_template('Accueil.html')
 
 @main.route('/<int:post_id>',methods=['GET','POST'])
 def post(post_id):
@@ -79,22 +79,6 @@ def create():
 def about():
     return render_template('about.html')
 
-@main.route('/add_velo', methods = ('GET','POST'))
-def add_velo():
-    if request.method == 'POST':
-        hauteur =request.form['hauteur']
-        longueur = request.form['longueur']
-        statut = request.form['status']
-        if not hauteur and not longueur and not statut:
-            flash("La taille et l'état sont nécéssaires")        
-        else:            
-            conn = get_db_connection()
-            c= conn.cursor().execute("SELECT COUNT(*) FROM Velos").fetchone()
-            conn.execute('INSERT INTO Velos (id_velo,hauteur, longueur, statut) VALUES (?,?,?,?)', (c[0],hauteur,longueur,statut))
-            conn.commit()
-            conn.close()
-            return redirect(url_for('main.index'))
-    return render_template('aj_velo.html')
 
 @main.route('/add_member',methods=('GET','POST'))
 def add_member():
@@ -125,9 +109,35 @@ def show_profil():
             abort(404)
     return render_template('dem_log.html')
 
-@main.route('/profile')
+@main.route('/profile',methods=['GET','POST'])
 def profile():
-    try: 
-        return render_template('aff_profile.html', login=current_user.login, mail=current_user.mail,numero_tel=current_user.numero_tel)
-    except: 
-        return redirect(url_for('auth.login'))
+    #try: 
+
+    historique,dh_historique,reservations,dh_reservations = tableau_de_bord(current_user.id_membre)
+    if request.method == 'POST':
+        action = request.form['action']
+        date_deb=request.form['date_deb']
+        date_fin = request.form['date_fin']
+        if not date_deb or not date_fin:
+            if action[0] == "remove":
+                supprimer_reservation(current_user.id_membre, action[1]+" "+action[2])
+                return render_template('booking_removed.html',date=action[1]+" "+action[2])
+            elif action[0] == "see_code":
+                code = afficher_code(current_user.id_membre,action[1]+" "+action[2])
+                return render_template('code.html',code=code)
+        elif date_deb and date_fin:
+            date_deb_list=request.form['date_deb'].split("T")
+            date_fin_list=request.form['date_fin'].split("T")
+            date_deb=" ".join(date_deb_list)+":00"
+            date_fin= " ".join(date_fin_list)+":00"
+            session['date_deb']=date_deb
+            session['date_fin']=date_fin
+            supprimer_reservations_date_depassee()
+            velos=velos_disponibles(session['date_deb'],session['date_fin'])
+            print(velos,len(velos))
+            return render_template('Tableau_de_bord.html', login=current_user.login, mail=current_user.mail,numero_tel=current_user.numero_tel, velos=velos,len=0, step2=True, len_historique=len(historique),historique=historique, reservations=reservations, len_reservations=len(reservations),dh_historique=dh_historique,dh_reservations=dh_reservations,len_velos=len(velos))
+        return redirect(url_for('booking.book'))
+    return render_template('Tableau_de_bord.html', login=current_user.login, mail=current_user.mail,numero_tel=current_user.numero_tel, velos=[],len=0, step2=False, len_historique=len(historique),historique=historique, reservations=reservations, len_reservations=len(reservations),dh_historique=dh_historique,dh_reservations=dh_reservations,len_velos=0)
+    #except: 
+        #return redirect(url_for('auth.login'))
+        

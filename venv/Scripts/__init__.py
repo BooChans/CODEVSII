@@ -13,7 +13,7 @@ db=SQLAlchemy()
 app = Flask(__name__)
 
 app.config['SECRET_KEY'] = 'hi'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///C:/Users/baoch/BV/venv/Scripts/BDD_velos.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///C:/Users/baoch/ST/venv/Scripts/BDD_velos.db'
 app.config['SECURITY_PASSWORD_SALT'] = "very-important"
 
 db.init_app(app)
@@ -40,6 +40,9 @@ app.register_blueprint(main_blueprint)
 
 from .booking import booking as booking_blueprint
 app.register_blueprint(booking_blueprint)
+
+from .admin import admin as admin_blueprint
+app.register_blueprint(admin_blueprint)
 
     
 app.config['MAIL_DEFAULT_SENDER'] = "noreply@flask.com"

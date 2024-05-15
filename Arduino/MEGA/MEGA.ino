@@ -1,27 +1,14 @@
 #include <Keypad.h>
 
-#define L1 8
-#define L2 7
-#define L3 6
-#define L4 5
-#define C1 4
-#define C2 3
-#define C3 2
+#include <Wire.h>
+#include <LiquidCrystal_I2C.h>
 
-const byte lignes = 4;
-const byte colonnes = 3;
+char array1[] = "Code";
+char vide[] = "               ";
 
-char code[lignes][colonnes] = {
-  {'1','2','3'},
-  {'4','5','6'},
-  {'7','8','9'},
-  {'*','0','#'}
-};
+LiquidCrystal_I2C lcd(0x27, 16, 2);
 
-byte pin_lignes[lignes] = {L1, L2, L3, L4};
-byte pin_colonnes[colonnes] = {C1, C2, C3};
 
-Keypad clavier = Keypad(makeKeymap(code), pin_lignes, pin_colonnes, lignes, colonnes);
 
 String input_password = "code ";
 char stringBuffer[256];
@@ -39,29 +26,56 @@ void setup() {
   pinMode(Relay3,OUTPUT);
     pinMode(Relay4,OUTPUT);
 
+  lcd.init();
+  lcd.backlight();
+
+  lcd.print(array1);
+  lcd.setCursor(0, 1);
+  lcd.print(vide);
+
 } 
 void loop() {
   if (Serial.available() > 0){
-    int hi=Serial.read();
-    Serial.println(hi);
-  if (hi==53){Serial.println("hi6");   digitalWrite(Relay2, HIGH);           
+    char initial=Serial.read();
+    Serial.println(initial);
+    char buf[16];
+
+    if (initial=='D'){
+      String action = Serial.readString();
+      if (action == "clear"){
+        lcd.setCursor(0, 1);
+        lcd.print(vide);
+      }
+      else{
+        action.toCharArray(buf,16);
+        lcd.setCursor(0, 1);
+        lcd.print(buf);
+      }}
+
+  
+
+  else{
+    char Buffer[4];
+    String initial = Serial.readString();
+    initial.toCharArray(Buffer,4);
+  if (initial = '0'){Serial.println("hi6");   digitalWrite(Relay2, HIGH);           
   delay(2000);
   digitalWrite(Relay2,LOW);
   } 
-  if (hi==54){Serial.println("hi7");
+  if (initial==54){Serial.println("hi7");
   digitalWrite(Relay, HIGH);           
 
   delay(2000);
   digitalWrite(Relay, LOW);  
            
   }
-  if (hi==55){Serial.println("hi8");   digitalWrite(Relay3, HIGH);           
+  if (initial==55){Serial.println("hi8");   digitalWrite(Relay3, HIGH);           
   delay(2000);
   digitalWrite(Relay3,LOW);
   } 
-    if (hi==56){Serial.println("hi9");   digitalWrite(Relay4, HIGH);           
+    if (initial==56){Serial.println("hi9");   digitalWrite(Relay4, HIGH);           
   delay(2000);
   digitalWrite(Relay4,LOW);
   } 
   }
-} 
+} }

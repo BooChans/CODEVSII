@@ -1,5 +1,5 @@
 from flask import Blueprint,render_template, redirect, url_for, request, flash
-from .ModifMembres import ajouter_membre,get_profil,changer_mdp, confirm
+from .ModifMembres import ajouter_membre,get_profil,changer_mdp, confirm, changer_mdp_oublie
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, logout_user, current_user,login_required
 from .models import Membres
@@ -34,18 +34,17 @@ def login():
                     flash("L'identifiant ou le mot de passe ne sont pas bons")
                 else:
                     login_user(user,remember=remember)
-                    return render_template('aff_prof.html', profil=profil)
             except:
                 flash("Votre données n'existent pas")
                 return redirect(url_for('auth.login'))
-    return render_template("login.html")
+    return render_template("Connexion.html")
             
 
 
 
 @auth.route('/signup', methods=['GET', 'POST'])
 @logout_required
-def signup_post():
+def signup():
     if request.method == 'POST':
         login = request.form['login']
         mdp = request.form['mdp']
@@ -68,6 +67,7 @@ def signup_post():
         else:        
             ajouter_membre(login,mdp,mail,numero_tel,registered_on)
             user = Membres.query.filter_by(login=login).first()
+            print(user)
             login_user(user)
             token =  generate_token(mail)
             confirm_url = url_for('auth.confirm_email',token=token, _external=True)
@@ -78,9 +78,9 @@ def signup_post():
             #except: 
                 #flash("Le pseudonyme ou l'adresse mail ou le numéro de téléphone saisi est déjà utilisé")
 
-        return render_template('aj_membres.html')
+        return render_template('Inscription.html')
 
-    return render_template('aj_membres.html')
+    return render_template('Inscription.html')
 
 @auth.route('/confirm/<token>')
 @login_required
@@ -140,4 +140,47 @@ def changepassword():
         return redirect(url_for('main.index'))
     return render_template('changepass.html')
 
-                
+           
+@auth.route('/forgottenpassword',methods=['GET','POST'])
+def forgottenpassword():
+    if request.method == 'POST':
+        mail = request.form['mail']
+        if not login: 
+            flash('Le login est nécessaire')
+        user = Membres.query.filter_by(mail=mail).first_or_404()
+        if not user: 
+            flash("Le profil n'existe pas")
+        else: 
+            token = generate_token(user.mail)
+            confirm_url = url_for('auth.forgottenpasswordconfirm', token=token, _external=True)
+            html = render_template('confirm_password.html', confirm_url=confirm_url)
+            subject = "Réinitialiser votre mot de passe"
+            send_email(user.mail, subject, html)   
+        return redirect(url_for('main.index'))
+    return render_template('MdpOublieMail.html')
+
+
+@auth.route('/forgottenpasswordconfirm/<token>',methods=['GET','POST'])
+def forgottenpasswordconfirm(token):
+    mail = confirm_token(token)
+    try: 
+        user = Membres.query.filter_by(mail=mail).first_or_404()
+        if request.method == "POST":
+            new_mdp = request.form['new_mdp']
+            onew_mdp = request.form['onew_mdp']
+            if new_mdp == onew_mdp: 
+                changer_mdp_oublie(user.login,new_mdp)
+                logout_user()
+                flash("Mot de passe changé, veuillez vous reconnecter")
+                return redirect(url_for('auth.login'))
+            else: 
+                flash("Les mots de passe ne correspondent pas")
+                return redirect(url_for('auth.forgottenpassword'))
+        return render_template('MdpOublie.html')
+    except: 
+        flash("Erreur, le mail n'existe pas")
+        return redirect(url_for('main.index'))
+    
+
+
+    

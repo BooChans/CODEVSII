@@ -43,11 +43,12 @@ unsigned int localPort = 2390;
 int openPin = 2; 
 char packetBuffer[256];
 char stringBuffer[256];
+String clear = "clear";
 IPAddress ip;
 
 WiFiUDP Udp;
 WiFiClient client;
-
+IPAddress serveur(192,168,43,84);
 
 void setup() {
   Serial.begin(9600);   
@@ -83,7 +84,7 @@ void setup() {
 
 
 void loop() {
-
+  char actionBuffer[16];
   if (WiFi.status() != status) {
     Serial.println("\nConnexion lost");
     NVIC_SystemReset();
@@ -105,9 +106,9 @@ void loop() {
     }
     Serial.println("Contents:");
     Serial.println(packetBuffer);
-    Serial1.write(packetBuffer);
 
-    Udp.beginPacket(Udp.remoteIP(), Udp.remotePort());
+
+    Udp.beginPacket(serveur, localPort);
     char buf[30];
     strcpy(buf,ReplyBuffer);
     strcat(buf," ");
@@ -121,7 +122,9 @@ void loop() {
 
     
     Udp.endPacket();
-
+    delay(2000);
+    Serial1.write("C");
+    Serial1.write(packetBuffer);
     }
 
   char touche = clavier.getKey();
@@ -131,16 +134,25 @@ void loop() {
 
       if(touche == '*') {
       input_password = ""; // clear input password
+      Serial1.write("D");
+      clear.toCharArray(actionBuffer, 16);
+      Serial1.write(actionBuffer);
     } else if(touche == '#') {
+      Serial1.write("D");
+      clear.toCharArray(actionBuffer, 16);
+      Serial1.write(actionBuffer);
       input_password.toCharArray(stringBuffer,256);
       Serial.write(stringBuffer);
-      Udp.beginPacket(Udp.remoteIP(), Udp.remotePort());
+      Udp.beginPacket(serveur, localPort);
       Udp.write(stringBuffer);
       Udp.endPacket();
 
       input_password = ""; // clear input password
     } else {
-      input_password += touche; // append new character to input password string
+      input_password += touche;
+      Serial1.write("D");
+      input_password.toCharArray(actionBuffer,16);
+      Serial1.write(actionBuffer); // append new character to input password string
     }
   }
 
