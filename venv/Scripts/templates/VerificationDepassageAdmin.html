@@ -69,89 +69,20 @@
             </div>
           </nav>
           <div class="container container-inscription" data-bs-target="#navbar-top" data-bs-spy="scroll" tabindex="0">
-    
-            <section class="projects no-padding-top">
-              <div class="container">
-
-                <p class="fs-8 fs-md-7 fs-xxl-6 text-success fw-bold my-0 text-capitalize mt-3 mb-4">Liste des utilisateurs</p>
-                  
-                <form method = "POST">
-                  <p class="fs-8 text-capitalize">Pseudonyme</p>
-                  <div class="input-group position-relative">
-                    <input class="form-control email-input" name="login" placeholder="Pseudonyme" />
-                  </div>
-
-                    <div class="form-check my-3">
-                      <input type="checkbox" class="form-check-input" name="admin">
-                      Afficher uniquement les 
-                      <div class="admin-icon ms-1">Admin</div>
-                    </div>
-                  
-                  <div class="d-flex justify-content-center mt-5">
-                    <button class="btn btn-gradient fs-8 d-inline-flex mb-7" type = "submit" name = "action" value = "search"><span>Chercher</span></button>
-                  </div>
-                </form>
-
-             
-                {% for i in range(len_user)%}
-             
-                <!-- Project-->
-                
-                <div class="project">
-                  <div class="row bg-white has-shadow">
-                    <div class="left-col col-lg-6 d-flex align-items-center justify-content-between">
-                      <div class="project-title d-flex align-items-center">
-                        <div class="image has-shadow">
-                            <img src="https://bootdey.com/img/Content/avatar/avatar2.png" alt="..." class="img-fluid">
-                        </div>
-                        <div class="wrapper d-flex flex-column justify-content-center ms-3">
-                            <div class="text d-flex align-items-center">
-                                <h3 class="h4 mb-0">{{users[i]['login']}}</h3>
-                                {% if users[i]['is_admin']%}
-                                <div class="admin-icon ms-3">Admin</div>
-                                {% endif %}
-                            </div>
-                            <div class="text flex-media d-flex align-items-center">
-                              <small class="me-2">{{users[i]['mail']}}</small>
-                              <small>{{users[i]['numero_tel']}}</small>
-                          </div>
-                          
-                        </div>
-                      </div>
-
-                    </div>
-
-                    <div class="left-col col-lg-6 d-flex align-items-center admin-container">
-                      <form method = "POST">
-                      <div class="d-flex">
-                        {% if not users[i]['is_admin'] and users[i]['login'] != "admin_BDD" %}
-                        <button class="btn btn-resa fs-8 d-inline-flex btn-auto-width px-4 btn-orange me-3 background-Upgrade" type = "submit" name = "action" value = "admin {{users[i]['id_membre']}}"><span>Passer en Admin</span></button>
-                        {% endif %}
-
-                        {% if users[i]['is_admin'] and users[i]['login'] != "admin_BDD"%}
-                        <button class="btn btn-resa fs-8 d-inline-flex btn-auto-width px-4 btn-orange me-3 background-Supprimer" type = "submit" name = "action" value = "remove_admin {{users[i]['id_membre']}}"><span>Enlever les droits admin</span></button>
-                        {% endif %}
-                        {% if users[i]['login'] != "admin_BDD"%}
-                        <button class="btn btn-resa fs-8 d-inline-flex btn-auto-width px-4 btn-orange me-3 background-Supprimer" type = "submit" name = "action" value = "remove {{users[i]['id_membre']}}"><span>Supprimer</span></button>
-                        {% endif %}
-                      </div>
-                    </form>
-                    </div>
-
-                    <div class="right-col col-lg-6 d-flex align-items-center">
-
-                    </div>
-                  </div>
+            
+            
+           
+           
+            <div class="col-12 col-lg-6 d-flex flex-column justify-content-center mt-4 mb-5 m-auto ">
+                <p>Etes-vous sûr de vouloir enlever les droits admin de cette utilisateur ?</p>
+                <div class="d-flex mt-2">
+                  <form method = "POST">
+                  <button class="btn btn-resa fs-8 d-inline-flex btn-auto-width px-4 btn-orange me-3 background-bleu1" type = "submit" name = "action" value = "confirm" ><span>Poursuivre</span></button>
+                  <button class="btn btn-resa fs-8 d-inline-flex btn-auto-width px-4 btn-orange ms-3 background-rouge2" type = "submit" name = "action" value = "abandon"><span>Abandonner</span></button>
+                  </form>
                 </div>
-                {% endfor %}
-                
-
-
-                
-
-                
               </div>
-              </section>        
+            
 
               
            

@@ -8,7 +8,7 @@ import datetime
 from .decorators import logout_required, admin_required
 from .ttoken import generate_token, confirm_token
 from .mmail import send_email
-from .admin_functions import add_bike,bike_list,remove_bike,user_list,MakeAdmin,remove_user,get_users,get_admin_users,get_admins,history,search_history,delete_history
+from .admin_functions import add_bike,bike_list,remove_bike,user_list,MakeAdmin,remove_user,get_users,get_admin_users,get_admins,history,search_history,delete_history,RemoveAdmin
 
 
 
@@ -63,24 +63,27 @@ def add_bike():
 def admin_users():
     users = user_list()
     if request.method == "POST":
-        session['admin'] = True if 'admin' in request.form else False
-        if "login" in request.form:
-            login = request.form['login']
-            session['searched_logins'] = login
-            return redirect(url_for('admin.admin_searchusers'))
-        if "login" not in request.form: 
-            session['login'] = None
-            return redirect(url_for('admin.admin_searchusers'))
-        if not login and not admin: 
-            return redirect(url_for('admin.admin_users'))
-        if "action" in request.form:
-            action = request.form["action"].split(" ")
-            if action [0] == "admin ":
-                MakeAdmin(action[1])
+        action = request.form['action'].split(" ")
+        if action[0] == "search":
+            session['admin'] = True if 'admin' in request.form else False
+            if "login" in request.form:
+                login = request.form['login']
+                session['searched_logins'] = login
+                return redirect(url_for('admin.admin_searchusers'))
+            if "login" not in request.form: 
+                session['login'] = None
+                return redirect(url_for('admin.admin_searchusers'))
+            if not login and not admin: 
                 return redirect(url_for('admin.admin_users'))
-            elif action[0] == "remove":
-                remove_user(action[1])
-                return redirect(url_for('admin.admin_users'))
+        elif action [0] == "admin":
+            session['login_to_be_admin'] = action[1]
+            return redirect(url_for('admin.admin_admin_confirm'))
+        elif action[0] == "remove":
+            session['login_to_be_removed'] = action[1]
+            return redirect(url_for('admin.admin_remove_user_confirm'))
+        elif action[0] == "remove_admin":
+            session['login_to_be_removed_admin'] = action[1]
+            return redirect(url_for('admin.admin_remove_admin_confirm'))
     return render_template('ListeUtilisateurs.html', users=users, len_user=len(users))
 
 @admin.route('/admin_searchusers',methods=["GET","POST"])
@@ -95,24 +98,27 @@ def admin_searchusers():
     else: 
         users = get_users(session['searched_logins'])
     if request.method == "POST":
-        session['admin'] = True if 'admin' in request.form else False
-        if "login" in request.form:
-            login = request.form['login']
-            session['searched_logins'] = login
-            return redirect(url_for('admin.admin_searchusers'))
-        if "login" not in request.form: 
-            session['login'] = None
-            return redirect(url_for('admin.admin_searchusers'))
-        if not login and not admin: 
-            return redirect(url_for('admin.admin_users'))
-        if "action" in request.form:
-            action = request.form["action"].split(" ")
-            if action [0] == "admin ":
-                MakeAdmin(action[1])
+        action = request.form['action'].split(" ")
+        if action[0] == "search":
+            session['admin'] = True if 'admin' in request.form else False
+            if "login" in request.form:
+                login = request.form['login']
+                session['searched_logins'] = login
+                return redirect(url_for('admin.admin_searchusers'))
+            if "login" not in request.form: 
+                session['login'] = None
+                return redirect(url_for('admin.admin_searchusers'))
+            if not login and not admin: 
                 return redirect(url_for('admin.admin_users'))
-            elif action[0] == "remove":
-                remove_user(action[1])
-                return redirect(url_for('admin.admin_users'))
+        elif action [0] == "admin":
+            session['login_to_be_admin'] = action[1]
+            return redirect(url_for('admin.admin_admin_confirm'))
+        elif action[0] == "remove":
+            session['login_to_be_removed'] = action[1]
+            return redirect(url_for('admin.admin_remove_user_confirm'))
+        elif action[0] == "remove_admin":
+            session['login_to_be_removed_admin'] = action[1]
+            return redirect(url_for('admin.admin_remove_admin_confirm'))
     return render_template('ListeUtilisateurs.html', users=users, len_user=len(users))
 
 
@@ -120,7 +126,10 @@ def admin_searchusers():
 @login_required
 @admin_required                    
 def admin_history():
-    historique,dh_historique = history()
+    try: 
+        historique,dh_historique = search_history(session['search_login'],session['search_id_velo'],session['search_date'])
+    except:
+        historique,dh_historique = history()
     if request.method == "POST":
         if request.form['action'] == 'delete_all':
             return redirect(url_for('admin.admin_delete_history'))
@@ -133,7 +142,7 @@ def admin_history():
                 print(session['search_date'])
             else: 
                 session['search_date']=None
-            return redirect(url_for('admin.admin_search_history'))
+            return redirect(url_for('admin.admin_history'))
     return render_template('AdminHistorique.html', historique = historique, dh_historique=dh_historique, len_historique = len(historique))
 
 
@@ -172,3 +181,54 @@ def admin_delete_history():
         if action == "abandon":
             return redirect(url_for('admin.admin_history'))
     return render_template('VerificationSuppressionHistorique.html')
+
+@admin.route('/admin_admin_confirm', methods = ["GET", "POST"])
+@login_required
+@admin_required 
+def admin_admin_confirm():
+    try: 
+        user = session['login_to_be_admin']
+        if request.method == "POST":
+            action = request.form['action']
+            if action == "confirm":
+                MakeAdmin(session['login_to_be_admin'])
+                return redirect(url_for('admin.admin_users'))
+            if action == "abandon":
+                return redirect(url_for('admin.admin_users'))
+    except: 
+        return redirect(url_for('admin.admin_users'))
+    return render_template('VerificationPassageAdmin.html')
+
+@admin.route('/admin_remove_user_confirm', methods = ["GET", "POST"])
+@login_required
+@admin_required 
+def admin_remove_user_confirm():
+    try:
+        user = session['login_to_be_removed']
+        if request.method == "POST":
+            action = request.form['action']
+            if action == "confirm":
+                remove_user(user)
+                return redirect(url_for('admin.admin_users'))
+            if action == "abandon":
+                return redirect(url_for('admin.admin_users'))
+    except: 
+        return redirect(url_for('admin.admin_users'))
+    return render_template('VerificationPassageAdmin.html')
+
+@admin.route('/admin_remove_admin_confirm', methods = ["GET", "POST"])
+@login_required
+@admin_required 
+def admin_remove_admin_confirm():
+    try:
+        user = session['login_to_be_removed_admin']
+        if request.method == "POST":
+            action = request.form['action']
+            if action == "confirm":
+                RemoveAdmin(user)
+                return redirect(url_for('admin.admin_users'))
+            if action == "abandon":
+                return redirect(url_for('admin.admin_users'))
+    except: 
+        return redirect(url_for('admin.admin_users'))
+    return render_template('VerificationDepassageAdmin.html')

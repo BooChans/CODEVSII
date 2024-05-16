@@ -76,7 +76,7 @@ def remove_user(id_membre):
     cur = connection.cursor()
     cur.execute("DELETE from Reservations where id_membre = ?", (id_membre,))
     cur.execute("DELETE from Historique where id_membre = ?", (id_membre,))
-    cur.execute("DELETE from Velos where id_membre = ?",(id_membre,))
+    cur.execute("DELETE from Membres where id_membre = ?",(id_membre,))
     connection.commit()
     connection.close()
 
@@ -127,7 +127,6 @@ def search_history(login, id_velo, date):
     cur = connection.cursor()
     cur.row_factory = sqlite3.Row
     if date: 
-        print(date)
         date = datetime.datetime.strptime(date, '%Y-%m-%d %H:%M:%S')
         date_lendemain = date + datetime.timedelta(days = 1)
     if not login and not id_velo and not date:

@@ -95,7 +95,8 @@ def dashboard():
     if request.method == 'POST':
         actions = request.form
         if 'action' in actions:
-            action = actions['action'].split()
+            action = actions['action'].split(" ")
+            print(action[0])
         if 'date_deb' in actions and 'date_fin' in actions:
             date_deb_form = actions['date_deb']
             date_fin_form = actions['date_fin']  
@@ -111,6 +112,8 @@ def dashboard():
                 flash("Vélo réservé à cette date ou vous avez déjà deux réservations actives")
                 return redirect(url_for('booking.dashboard'))
         if not date_deb_form or not date_fin_form:
+            if action[0] == "history":
+                return redirect(url_for('booking.history'))
             if action[0] == "remove":
                 supprimer_reservation(current_user.id_membre, action[1]+" "+action[2])
                 return render_template('booking_removed.html',date=action[1]+" "+action[2])
