@@ -7,7 +7,8 @@ from flask_session import Session
 from .decorators import confirmed_required
 import socket
 
-UDP_PC = "192.168.43.84"
+UDP_PC_R = "192.168.43.84"
+UDP_PC = "10.22.29.2"
 UDP_PORT = 2390
 s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)  # UDP   
 
@@ -81,17 +82,19 @@ def history_user():
     return render_template('bookings.html',bookings=history_u,len=len(history_u))
 
 
-@booking.route('/dashboard',methods=['GET','POST'])
+@booking.route('/dashboard_old',methods=['GET','POST'])
 @login_required
 @confirmed_required
-def dashboard():
+def dashboard_old():
     #try: 
     supprimer_reservations_date_depassee() #print la date
     historique,dh_historique,reservations,dh_reservations = tableau_de_bord(current_user.id_membre)
     codes=codes_list()
     print(codes)
+    s.sendto(bytes("code_deb",'utf-8'),(UDP_PC,UDP_PORT))
     for code in codes:
         s.sendto(bytes(str(code[0])+" "+str(code[1]),'utf-8'),(UDP_PC,UDP_PORT))
+    s.sendto(bytes("code_fin",'utf-8'),(UDP_PC,UDP_PORT))
     if request.method == 'POST':
         actions = request.form
         if 'action' in actions:
@@ -118,9 +121,10 @@ def dashboard():
                 supprimer_reservation(current_user.id_membre, action[1]+" "+action[2])
                 return render_template('booking_removed.html',date=action[1]+" "+action[2])
             elif action[0] == "see_code":
-
                 code = afficher_code(current_user.id_membre,action[1]+" "+action[2])
                 return render_template('code.html',code=code)
+            else: 
+                return redirect(url_for('booking.dashboard_old'))
         elif date_deb_form and date_fin_form:
             date_deb_list=date_deb_form.split("T")
             date_fin_list=date_fin_form.split("T")
@@ -136,8 +140,78 @@ def dashboard():
     #except: 
         #return redirect(url_for('auth.login'))
         
+
+@booking.route('/dashboard',methods=['GET','POST'])
+@login_required
+@confirmed_required
+def dashboard():
+    try: 
+        velos = velos_disponibles(session['date_deb'],session['date_fin'])
+        step2 = True 
+    except:
+        velos = []
+        step2 = False
+    supprimer_reservations_date_depassee() #print la date
+    historique,dh_historique,reservations,dh_reservations = tableau_de_bord(current_user.id_membre)
+    codes=codes_list()
+    print(codes)
+    s.sendto(bytes("code_deb",'utf-8'),(UDP_PC,UDP_PORT))
+    for code in codes:
+        s.sendto(bytes(str(code[0])+" "+str(code[1]),'utf-8'),(UDP_PC,UDP_PORT))
+    s.sendto(bytes("code_fin",'utf-8'),(UDP_PC,UDP_PORT))
+    if request.method == 'POST':
+        actions = request.form
+        action = actions['action'].split(" ")
+        if action[0] == "date":
+            if actions['date_deb'] and actions['date_fin']:
+                date_deb_form = actions['date_deb']
+                date_fin_form = actions['date_fin']  
+                date_deb_list=date_deb_form.split("T")
+                date_fin_list=date_fin_form.split("T")
+                date_deb=" ".join(date_deb_list)+":00"
+                date_fin= " ".join(date_fin_list)+":00"
+                session['date_deb']=date_deb
+                session['date_fin']=date_fin
+                supprimer_reservations_date_depassee()
+                return redirect(url_for('booking.dashboard')) 
+            else: 
+                flash("Mettre deux dates")
+                return redirect(url_for('booking.dashboard'))
+        if action[0] == "book":
+            id_velo = int(action[1]) 
+            try:
+                reserver_velo(id_velo,current_user.id_membre, session['date_deb'],session['date_fin'])
+                date=session['date_deb']
+                del session['date_deb']
+                del session['date_fin']
+                return render_template('success_book.html',date=date)
+            except: 
+                flash("Vélo réservé à cette date ou vous avez déjà deux réservations actives")
+                return redirect(url_for('booking.dashboard'))
+        if action[0] == "history":
+            return redirect(url_for('booking.history'))
+        if action[0] == "remove":
+            supprimer_reservation(current_user.id_membre, action[1]+" "+action[2])
+            return render_template('booking_removed.html',date=action[1]+" "+action[2])
+        elif action[0] == "see_code":
+            session['code'] = afficher_code(current_user.id_membre,action[1]+" "+action[2])
+            return redirect(url_for('booking.code'))
+        else: 
+            return redirect(url_for('booking.dashboard'))
+    return render_template('Tableau_de_bord.html', login=current_user.login, mail=current_user.mail,numero_tel=current_user.numero_tel, velos=velos, step2=step2, len_historique=len(historique),historique=historique, reservations=reservations, len_reservations=len(reservations),dh_historique=dh_historique,dh_reservations=dh_reservations,len_velos=len(velos))
+    #except: 
+        #return redirect(url_for('auth.login'))
+
 @booking.route('/history')
 @login_required
 def history():
     userHistory = afficher_historique_user(current_user.id_membre)
     return render_template('Historique.html', userHistory=userHistory,len_userHistory = len(userHistory))
+
+@booking.route('/code')
+@login_required
+def code():
+    try:
+        return render_template('code.html',code=session['code'])
+    except: 
+        return redirect(url_for('booking.dashboard_reworked'))

@@ -82,6 +82,69 @@
                 
                 
 
+                {% if step2 %}
+                <h4 class="mb-x1 fs-8 fs-md-7 fs-xxl-6 text-success fw-bold pt-6 mt-3">Changer de date</h4>
+
+                <div class="col-12 col-lg-5 d-flex flex-column justify-content-center mt-0"  for="birthdaytime">
+                  <form method="post">
+                    <label class="mb-x1 fs-8 fs-md-7 fs-xxl-6 text-success fw-bold pt-6">Début de la réservation</label>
+                    <div class="input-group position-relative">
+                      <input class="form-control email-input" type="datetime-local" name="date_deb">
+                    </div>
+                </div>   
+                    
+                <div class="col-12 col-lg-5 d-flex flex-column justify-content-center mt-0" for="birthdaytime">
+                    <label class="mb-x1 fs-8 fs-md-7 fs-xxl-6 text-success fw-bold pt-6">Fin de la réservation</label>
+                    <div class="input-group position-relative">
+                      <input class="form-control email-input" type="datetime-local" name="date_fin">
+                    </div>
+                </div>
+                
+                <div class="d-flex justify-content-center mt-5">
+                  <button class="btn btn-gradient fs-8 d-inline-flex" type = "submit" name = "action" value="date" ><span>Continuer</span><span class="uil uil-arrow-right"></span></button>
+                </div>
+              </form>
+
+              
+                <h4 class="mb-x1 fs-8 fs-md-7 fs-xxl-6 text-success fw-bold pt-6 mt-3">Step 2 - Choisissez parmi un des vélos disponibles pour cette date</h4>
+                
+                
+                  
+  
+  
+                <div class="mb-4 mb-lg-0">
+                  <div class="swiper-theme-container position-relative taille">
+                    <div class="swiper-container theme-slider" data-swiper='{"spaceBetween":15,"loop":false,"loopedSlides":5,"breakpoints":{"0":{"slidesPerView":2},"768":{"slidesPerView":4},"1024":{"slidesPerView":5}}}'>
+                      <div class="swiper-wrapper">
+                        
+  
+                       {% for i in range(len_velos) %}
+                        <div class="product-card swiper-slide">
+                          <div class="product-card-top" style="background-image: url('static/assets/img/products/products/exVelo.jpeg')">
+                              <div class="availability-icon background-vert">Disponible</div>
+                          </div>
+                          <div class="d-flex flex-column px-x1 pt-3 product-card-body">
+                              <h3 class="text-success fw-semi-bold line-clamp-1 fs-md-11 ">{{velos[i]['id_velo']}}</h3>
+                              <p class="text-black fs-10 fs-md-9 mb-0 mb-0">{{velos[i]['longueur']}}</p>
+                              <p class="text-black fs-10 fs-md-9 fs-xxl-8 mb-3 line-clamp-2">{{velos[i]['statut']}}</p>
+                            <form method = "post">
+                              <button class="btn-admin-velo bordure-none mb-2 background-vert" name = "action" value = "book {{velos[i]['id_velo']}}">Réserver</button>
+                            </form>
+                          </div>
+                        </div>
+                        {% endfor %}
+  
+  
+                      </div>
+                    </div>
+                    <div class="slider-nav">
+                      <button class="btn prev-button" data-slider="slider-1"><span class="uil uil-angle-left-b"></span></button>
+                      <button class="btn next-button" data-slider="slider-1"><span class="uil uil-angle-right-b"></span></button>
+                    </div>
+                  </div>
+                </div>
+
+                {% endif %}
                 
                   <h4 class="fs-8 fs-md-7 fs-xxl-6 text-success fw-bold pt-6 text-capitalize">Mes réservations</h4>
                   <!--<p class="text-black fs-10 fs-md-9 fs-xxl-8 lh-xl mb-0 line-clamp-5"> Aucune réservation en cours</p>-->
@@ -111,7 +174,7 @@
                               </div>
                             </div>
 
-                            <div class="project-date"><span class="hidden-sm-down">{{reservations[i]['id_velo']}}<div class="H-size-tag ms-3"></div></span></div>
+                            <div class="project-date"><span class="hidden-sm-down">{{reservations[i]['id_velo']}}<div class="H-size-tag ms-3">{{reservations[i]['hauteur']}}</div></span></div>
                           </div>
                           <div class="right-col col-lg-6 d-flex align-items-center">
                             <div class="project-title d-flex align-items-center">
@@ -180,7 +243,7 @@
                               </div>
                             </div>
 
-                            <div class="project-date"><span class="hidden-sm-down">{{historique[i]['id_velo']}}<div class="H-size-tag ms-3"></div></span></div>
+                            <div class="project-date"><span class="hidden-sm-down">{{historique[i]['id_velo']}}<div class="H-size-tag ms-3">{{historique[i]['hauteur']}}</div></span></div>
                           </div>
                           <div class="right-col col-lg-6 d-flex align-items-center">
                             <div class="project-title d-flex align-items-center">
@@ -219,6 +282,7 @@
 
               <h1 class="mt-5 fs-5 fs-lg-3 fs-xl-2 text-secondary text-capitalize fw-light mb-x1 text-lg-center">Réservation</h1>
 
+              {% if not step2 %}
 
               <div class="col-12 col-lg-6  mt-0">
                 <h4 class="fs-8 fs-md-7 fs-xxl-6 text-success fw-bold pt-6">Step 1 - Choisissez une date</h4>
@@ -245,82 +309,27 @@
                     </div>
                     
                     <div class="d-flex justify-content-center mt-5">
-                      <button class="btn btn-gradient fs-8 d-inline-flex"><span>Continuer</span><span class="uil uil-arrow-right"></span></button>
+                      <button class="btn btn-gradient fs-8 d-inline-flex" type = "submit" name = "action" value="date" ><span>Continuer</span><span class="uil uil-arrow-right"></span></button>
                     </div>
                   </form>
 
 
-                    
+
 
      
               </div>
 
 
-              
-
-
-
-
-              
-              
-
-
-
-              {% if step2 %}
-
-              
-              <h4 class="mb-x1 fs-8 fs-md-7 fs-xxl-6 text-success fw-bold pt-6 mt-3">Step 2 - Choisissez votre vélo</h4>
-              
-              
-                
-
-
-              <div class="mb-4 mb-lg-0">
-                <div class="swiper-theme-container position-relative taille">
-                  <div class="swiper-container theme-slider" data-swiper='{"spaceBetween":15,"loop":false,"loopedSlides":5,"breakpoints":{"0":{"slidesPerView":2},"768":{"slidesPerView":4},"1024":{"slidesPerView":5}}}'>
-                    <div class="swiper-wrapper">
-                      
-
-                     {% for i in range(len_velos) %}
-                      
-                      <div class="product-card swiper-slide">
-                        <div class="product-card-top" style="background-image: url('static/assets/img/products/products/exVelo.jpeg')">
-                            <div class="availability-icon background-vert">Disponible</div>
-                        </div>
-                        <div class="d-flex flex-column px-x1 pt-3 product-card-body">
-                            <h3 class="text-success fw-semi-bold line-clamp-1 fs-md-11 ">{{velos[i]['id_velo']}}</h3>
-                            <p class="text-black fs-10 fs-md-9 mb-0 mb-0">{{velos[i]['longueur']}}</p>
-                            <p class="text-black fs-10 fs-md-9 fs-xxl-8 mb-3 line-clamp-2">{{velos[i]['statut']}}</p>
-                        </div>
-                      </div>
-                    
-                      {% endfor %}
-
-
-                    </div>
-                  </div>
-                  <div class="slider-nav">
-                    <button class="btn prev-button" data-slider="slider-1"><span class="uil uil-angle-left-b"></span></button>
-                    <button class="btn next-button" data-slider="slider-1"><span class="uil uil-angle-right-b"></span></button>
-                  </div>
-                </div>
-              </div>
-
-              
-              
-              <form method="post">
-              <select class="mb-3 form-control email-input" name="book" id="taille" >
-                <option value="" disabled selected hidden>Choisissez votre vélo</option>
-                {% for i in range(len_velos) %}
-                  <option value="{{velos[i]['id_velo']}}">{{velos[i]['id_velo']}}</option>
-                {% endfor %}
-              </select>
-
-              <div class="d-flex justify-content-center mt-5">
-                <button class="btn btn-gradient fs-8 d-inline-flex" type = "submit"><span>Valider ma réservation</span><span class="uil uil-arrow-right"></span></button>
-              </div>
-            </form>
               {% endif %}
+
+
+
+
+              
+              
+
+
+
             </div>
                 
           </div>    

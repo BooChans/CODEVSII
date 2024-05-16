@@ -158,11 +158,11 @@ def tableau_de_bord(id_membre):
     connection = sqlite3.connect('BDD_velos.db')
     cur = connection.cursor()
     cur.row_factory = sqlite3.Row
-    cur.execute("SELECT * from Historique where id_membre = ? order by date_deb", (id_membre,))
+    cur.execute("SELECT * from Historique H join Velos V on H.id_velo = V.id_velo where id_membre = ? order by date_deb", (id_membre,))
     historique = cur.fetchmany(3)
     dh_historique = [(datetime.datetime.strptime(historique[i]['date_deb'],'%Y-%m-%d %X').date(),datetime.datetime.strptime(historique[i]['date_deb'],'%Y-%m-%d %X').time(),datetime.datetime.strptime(historique[i]['date_fin'],'%Y-%m-%d %X').date(),datetime.datetime.strptime(historique[i]['date_fin'],'%Y-%m-%d %X').time()) for i in range(len(historique))]
 
-    cur.execute("SELECT * from Reservations where id_membre = ? order by date_deb", (id_membre,))
+    cur.execute("SELECT * from Reservations R join Velos V on R.id_velo = V.id_velo where id_membre = ? order by date_deb", (id_membre,))
     reservations = cur.fetchmany(2)
     connection.close()
     dh_reservations = [(datetime.datetime.strptime(reservations[i]['date_deb'],'%Y-%m-%d %X').date(),datetime.datetime.strptime(reservations[i]['date_deb'],'%Y-%m-%d %X').time(),datetime.datetime.strptime(reservations[i]['date_fin'],'%Y-%m-%d %X').date(),datetime.datetime.strptime(reservations[i]['date_fin'],'%Y-%m-%d %X').time()) for i in range(len(reservations))]
