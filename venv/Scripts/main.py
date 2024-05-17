@@ -8,6 +8,8 @@ from flask_login import current_user
 from flask_session import Session
 from .reservations import reserver_velo,supprimer_reservation,afficher_code,supprimer_reservations_date_depassee,velos_disponibles,tableau_de_bord
 import datetime
+from .models import Membres
+
 
 main = Blueprint('main', __name__)
 
@@ -42,7 +44,14 @@ def index():
     #velos = conn.execute('SELECT * FROM Velos').fetchall()
     #conn.close()
     #adress_list=[url_for('main.index')+str(velos[i]['id_velo']) for i in range(len(velos))]
-    return render_template('Accueil.html')
+
+    try: 
+        user = current_user.login
+        admin = current_user.is_admin
+    except: 
+        user = None
+        admin = False
+    return render_template('Accueil.html',login=user, admin=admin)
 
 @main.route('/<int:post_id>',methods=['GET','POST'])
 def post(post_id):
@@ -100,14 +109,8 @@ def add_member():
 
 @main.route('/profil', methods=('GET','POST'))
 def show_profil():
-    if request.method == 'POST': 
-        login=request.form['login']
-        profil = get_profil(login)
-        if profil is not None:
-            return render_template('aff_prof.html', profil=profil)
-        else: 
-            abort(404)
-    return render_template('dem_log.html')
+        profil = get_profil(current_user.login)
+        return render_template('aff_prof.html', profil=profil)
 
 @main.route('/profile',methods=['GET','POST'])
 def profile():

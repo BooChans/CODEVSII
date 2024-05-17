@@ -202,7 +202,7 @@ def dashboard():
             return redirect(url_for('booking.code'))
         else: 
             return redirect(url_for('booking.dashboard'))
-    return render_template('Tableau_de_bord.html', login=current_user.login, mail=current_user.mail,numero_tel=current_user.numero_tel, velos=velos, step2=step2, len_historique=len(historique),historique=historique, reservations=reservations, len_reservations=len(reservations),dh_historique=dh_historique,dh_reservations=dh_reservations,len_velos=len(velos), date_deb_html=date_deb_html, date_fin_html=date_fin_html)
+    return render_template('Tableau_de_bord.html',admin = current_user.is_admin, login=current_user.login, mail=current_user.mail,numero_tel=current_user.numero_tel, velos=velos, step2=step2, len_historique=len(historique),historique=historique, reservations=reservations, len_reservations=len(reservations),dh_historique=dh_historique,dh_reservations=dh_reservations,len_velos=len(velos), date_deb_html=date_deb_html, date_fin_html=date_fin_html)
     #except: 
         #return redirect(url_for('auth.login'))
 

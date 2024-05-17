@@ -34,6 +34,11 @@ def login():
                     flash("L'identifiant ou le mot de passe ne sont pas bons")
                 else:
                     login_user(user,remember=remember)
+                    next_page = request.args.get('next')
+                    if next_page:
+                        return redirect(next_page)
+                    else:
+                        return redirect(url_for('main.index'))
             except:
                 flash("Votre données n'existent pas")
                 return redirect(url_for('auth.login'))

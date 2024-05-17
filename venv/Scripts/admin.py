@@ -18,7 +18,9 @@ admin = Blueprint('admin', __name__)
 @login_required
 @admin_required
 def admin_tools():
-    return render_template('GestionAdmin.html')
+    admin = current_user.is_admin
+    user = current_user.login
+    return render_template('GestionAdmin.html',user=user, admin=admin)
 
 @admin.route('/admin_velos',methods=["GET","POST"])
 @login_required
