@@ -48,7 +48,7 @@ while True:
                     cur.execute(query, (date,))
                     connection.commit()
                     connection.close()
-                    codes[code]=(codes[code][0],codes[code][1]+1)
+                    codes[code]=(codes[code][0],1)
                 if codes[code] == 1: #faire fonction
                     query = "UPDATE from Historique SET date_remise = ?"
                     cur.execute(query, (date,))

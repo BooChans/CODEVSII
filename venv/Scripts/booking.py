@@ -148,9 +148,13 @@ def dashboard():
     try: 
         velos = velos_disponibles(session['date_deb'],session['date_fin'])
         step2 = True 
+        date_deb_html = session['date_deb']
+        date_fin_html = session['date_fin']
     except:
         velos = []
         step2 = False
+        date_deb_html = None
+        date_fin_html = None
     supprimer_reservations_date_depassee() #print la date
     historique,dh_historique,reservations,dh_reservations = tableau_de_bord(current_user.id_membre)
     codes=codes_list()
@@ -184,7 +188,7 @@ def dashboard():
                 date=session['date_deb']
                 del session['date_deb']
                 del session['date_fin']
-                return render_template('success_book.html',date=date)
+                return render_template('ReservationReussie.html',date=date)
             except: 
                 flash("Vélo réservé à cette date ou vous avez déjà deux réservations actives")
                 return redirect(url_for('booking.dashboard'))
@@ -192,13 +196,13 @@ def dashboard():
             return redirect(url_for('booking.history'))
         if action[0] == "remove":
             supprimer_reservation(current_user.id_membre, action[1]+" "+action[2])
-            return render_template('booking_removed.html',date=action[1]+" "+action[2])
+            return render_template('ReservationAnnulee.html',date=action[1]+" "+action[2])
         elif action[0] == "see_code":
             session['code'] = afficher_code(current_user.id_membre,action[1]+" "+action[2])
             return redirect(url_for('booking.code'))
         else: 
             return redirect(url_for('booking.dashboard'))
-    return render_template('Tableau_de_bord.html', login=current_user.login, mail=current_user.mail,numero_tel=current_user.numero_tel, velos=velos, step2=step2, len_historique=len(historique),historique=historique, reservations=reservations, len_reservations=len(reservations),dh_historique=dh_historique,dh_reservations=dh_reservations,len_velos=len(velos))
+    return render_template('Tableau_de_bord.html', login=current_user.login, mail=current_user.mail,numero_tel=current_user.numero_tel, velos=velos, step2=step2, len_historique=len(historique),historique=historique, reservations=reservations, len_reservations=len(reservations),dh_historique=dh_historique,dh_reservations=dh_reservations,len_velos=len(velos), date_deb_html=date_deb_html, date_fin_html=date_fin_html)
     #except: 
         #return redirect(url_for('auth.login'))
 
