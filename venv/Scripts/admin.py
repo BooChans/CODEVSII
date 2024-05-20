@@ -8,7 +8,7 @@ import datetime
 from .decorators import logout_required, admin_required
 from .ttoken import generate_token, confirm_token
 from .mmail import send_email
-from .admin_functions import add_bike,bike_list,remove_bike,user_list,MakeAdmin,remove_user,get_users,get_admin_users,get_admins,history,search_history,delete_history,RemoveAdmin
+from .admin_functions import add_one_bike,bike_list,remove_bike,user_list,MakeAdmin,remove_user,get_users,get_admin_users,get_admins,history,search_history,delete_history,RemoveAdmin
 
 
 
@@ -27,7 +27,6 @@ def admin_tools():
 @admin_required
 def admin_velos():
     velos = bike_list()
-
     if request.method == "POST":
         action = request.form['action'].split(" ")
         if action[0] == "change":
@@ -47,15 +46,17 @@ def admin_velos():
 @login_required
 @admin_required
 def add_bike():
-    if request.method == 'POST':
-        hauteur =request.form['hauteur']
+    if request.method == "POST":
+        print(request.form)
+        hauteur = request.form['hauteur']
         longueur = request.form['longueur']
-        statut = request.form['status']
+        statut = request.form['statut']
         if not hauteur or not longueur or not statut:
             flash("La taille et l'état sont nécéssaires")        
         else:
-            add_bike(hauteur,longueur,statut)
-            return redirect(url_for('main.index'))
+            print("hi")
+            add_one_bike(hauteur,longueur,statut)
+            return redirect(url_for('admin.admin_tools'))
     return render_template('AjouterVelo.html')
 
 

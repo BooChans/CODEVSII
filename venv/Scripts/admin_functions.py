@@ -47,12 +47,12 @@ def deleteHistory():
     connection.close()
 
 
-def add_bike(hauteur,longueur,statut):
+def add_one_bike(hauteur,longueur,statut):
     connection = sqlite3.connect('BDD_velos.db')
     cur = connection.cursor()
-    cur.execute("SELECT COUNT(*) FROM Velos").fetchone()
+    cur.execute("SELECT COUNT(*) FROM Velos")
     c = cur.fetchone()[0]
-    cur.execute('INSERT INTO Velos (id_velo,hauteur, longueur, statut) VALUES (?,?,?,?)', (c[0],hauteur,longueur,statut))
+    cur.execute('INSERT INTO Velos (id_velo,hauteur, longueur, statut) VALUES (?,?,?,?)', (c,hauteur,longueur,statut))
     connection.commit()
     connection.close()
 

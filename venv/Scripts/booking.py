@@ -7,8 +7,8 @@ from flask_session import Session
 from .decorators import confirmed_required
 import socket
 
-UDP_PC_R = "192.168.43.84"
-UDP_PC = "10.22.29.2"
+UDP_PC = "192.168.43.84"
+UDP_PC_R = "10.22.29.2"
 UDP_PORT = 2390
 s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)  # UDP   
 
@@ -191,6 +191,8 @@ def dashboard():
                 return render_template('ReservationReussie.html',date=date)
             except: 
                 flash("Vélo réservé à cette date ou vous avez déjà deux réservations actives")
+                del session['date_deb']
+                del session['date_fin']
                 return redirect(url_for('booking.dashboard'))
         if action[0] == "history":
             return redirect(url_for('booking.history'))
