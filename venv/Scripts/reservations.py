@@ -149,10 +149,10 @@ def codes_list():
     connection = sqlite3.connect('BDD_velos.db')
     cur = connection.cursor()
     cur.row_factory = sqlite3.Row
-    cur.execute("SELECT id_velo,code from Reservations")
+    cur.execute("SELECT id_velo,code,date_deb from Reservations")
     codes=cur.fetchall()
     connection.close()
-    return [(code['id_velo'],code['code']) for code in codes]
+    return [(code['id_velo'],code['code'], code['date_deb']) for code in codes]
 
 def tableau_de_bord(id_membre):
     connection = sqlite3.connect('BDD_velos.db')
@@ -167,3 +167,11 @@ def tableau_de_bord(id_membre):
     connection.close()
     dh_reservations = [(datetime.datetime.strptime(reservations[i]['date_deb'],'%Y-%m-%d %X').date(),datetime.datetime.strptime(reservations[i]['date_deb'],'%Y-%m-%d %X').time(),datetime.datetime.strptime(reservations[i]['date_fin'],'%Y-%m-%d %X').date(),datetime.datetime.strptime(reservations[i]['date_fin'],'%Y-%m-%d %X').time()) for i in range(len(reservations))]
     return historique,dh_historique,reservations,dh_reservations
+
+def bikes():
+    connection = sqlite3.connect('BDD_velos.db')
+    cur = connection.cursor()
+    cur.row_factory = sqlite3.Row
+    cur.execute("SELECT * FROM Velos")
+    velos = cur.fetchall()
+    return velos

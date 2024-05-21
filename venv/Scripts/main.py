@@ -6,7 +6,7 @@ import socket
 from .ModifMembres import ajouter_membre, get_profil
 from flask_login import current_user
 from flask_session import Session
-from .reservations import reserver_velo,supprimer_reservation,afficher_code,supprimer_reservations_date_depassee,velos_disponibles,tableau_de_bord
+from .reservations import reserver_velo,supprimer_reservation,afficher_code,supprimer_reservations_date_depassee,velos_disponibles,tableau_de_bord,bikes
 import datetime
 from .models import Membres
 
@@ -106,6 +106,12 @@ def add_member():
                 flash('nope')
 
     return render_template('aj_membres.html')
+
+@main.route('/velos')
+def velos():
+    velos = bikes()
+    return render_template('Velos.html',velos=velos, len_velos=len(velos))
+
 
 @main.route('/profil', methods=('GET','POST'))
 def show_profil():

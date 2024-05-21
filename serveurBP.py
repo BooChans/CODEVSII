@@ -19,7 +19,7 @@ while True:
     data,addr=s.recvfrom(1024)
     data=str(data,"utf-8")
     print(data,addr[0])
-    if addr[0]=='10.22.29.2':
+    if addr[0]=='192.168.43.84':
         if data == "code_deb":
             received_codes=[]
         elif data == "code_fin":
@@ -30,31 +30,38 @@ while True:
             data=data.split(" ")
             id_velo = int(data[0])
             code = int(data[1])
+            date_deb = data[2]+ " "+data[3]
             received_codes.append(code)
             if code not in codes:
-                codes[code]=(id_velo,0)
+                codes[code]=(id_velo,0,date_deb)
     if addr[0] == '192.168.43.129':
         try:
             code = int(data)
             print(code)
+            print(codes)
             date = datetime.datetime.now().strftime('%Y-%m-%d %X')
             connection = sqlite3.connect('venv/Scripts/BDD_velos.db')
             cur = connection.cursor()
             if code in codes.keys():
                 print(code, "accepted")
-                if codes[code] == 0:
+                print(codes[code][0])
+                if codes[code][1] == 0:
+                    print(codes[code][2])
                     s.sendto(bytes(str(codes[code][0]),'utf-8'),(UDP_IP,UDP_PORT))  #faire fonction
-                    query = "UPDATE from Historique SET date_recup = ?" 
-                    cur.execute(query, (date,))
+                    query = "UPDATE Historique SET date_recup = ? where id_velo = ? and date_deb = ?" 
+                    cur.execute(query, (date, codes[code][0],codes[code][2]))
                     connection.commit()
-                    connection.close()
-                    codes[code]=(codes[code][0],1)
-                if codes[code] == 1: #faire fonction
-                    query = "UPDATE from Historique SET date_remise = ?"
-                    cur.execute(query, (date,))
+                    codes[code]=(codes[code][0],1,codes[code][2])
+                if codes[code][1] == 1: #faire fonction
+                    query = "UPDATE Historique SET date_remise = ? where id_velo = ? and date_deb = ?"
+                    print(codes[code])
+                    cur.execute(query, (date, codes[code][0], codes[code][2]))
                     connection.commit()
-                    connection.close()
+                    print(codes)
+            connection.close()
         except:
             None
+
+
     
     

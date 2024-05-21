@@ -161,7 +161,8 @@ def dashboard():
     print(codes)
     s.sendto(bytes("code_deb",'utf-8'),(UDP_PC,UDP_PORT))
     for code in codes:
-        s.sendto(bytes(str(code[0])+" "+str(code[1]),'utf-8'),(UDP_PC,UDP_PORT))
+        print(code[2])
+        s.sendto(bytes(str(code[0])+" "+str(code[1])+ " "+code[2],'utf-8'),(UDP_PC,UDP_PORT))
     s.sendto(bytes("code_fin",'utf-8'),(UDP_PC,UDP_PORT))
     if request.method == 'POST':
         actions = request.form
@@ -212,12 +213,12 @@ def dashboard():
 @login_required
 def history():
     userHistory = afficher_historique_user(current_user.id_membre)
-    return render_template('Historique.html', userHistory=userHistory,len_userHistory = len(userHistory))
+    return render_template('Historique.html', userHistory=userHistory,len_userHistory = len(userHistory), login=current_user.login)
 
 @booking.route('/code')
 @login_required
 def code():
     try:
-        return render_template('code.html',code=session['code'])
+        return render_template('code.html',code=session['code'],login=current_user.login)
     except: 
         return redirect(url_for('booking.dashboard_reworked'))

@@ -24,6 +24,7 @@
     <meta name="msapplication-TileImage" content="{{url_for('static',filename='assets/img/favicons/mstile-150x150.png')}}">
     <meta name="theme-color" content="#ffffff">
     <script src="{{url_for('static',filename='assets/js/config.js')}}"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-...votre_clé_de_hachage..." crossorigin="anonymous" />
 
 
     <!-- ===============================================-->
@@ -48,45 +49,136 @@
     <main class="main" id="top">
       <div class="bg-white">
         <div class="content">
-          <div class="bg-white p-1 p-lg-2">
-            <div class="container">
-              <div class="d-flex justify-content-end align-items-center"><a class="ms-2 ms-md-3 submenu" href="#!"><span class="uil uil-bill"></span><span class="ms-1 fs-10 fs-sm-9">sale</span></a><a class="ms-2 ms-md-3 submenu" href="#!"><span class="uil uil-file-heart"></span><span class="ms-1 fs-10 fs-sm-9">wishlist</span></a><a class="ms-2 ms-md-3 submenu" href="#!"><span class="uil uil-shopping-cart"></span><span class="ms-1 fs-10 fs-sm-9">cart</span></a><a class="ms-2 ms-md-3 submenu" href="#!"><span class="uil uil-user-circle"></span><span class="ms-1 fs-10 fs-sm-9">log in/sign up</span></a>
-              </div>
-            </div>
-          </div>
-          <nav class="navbar navbar-expand-lg py-1" id="navbar-top" data-navbar-soft-on-scroll="data-navbar-soft-on-scroll">
-            <div class="container"><a class="navbar-brand me-lg-auto cursor-pointer" href=""><img class="w-50 w-md-100 img-fluid" src="{{url_for('static',filename='assets/img/logos/logo.png')}}" alt="" /></a>
-              <button class="navbar-toggler border-0 pe-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
-              <div class="collapse navbar-collapse" id="navbarSupportedContent" data-navbar-collapse="data-navbar-collapse">
-                <div class="container d-lg-flex justify-content-lg-end pe-lg-0 w-lg-100">
-                  
-                  <ul class="navbar-nav mt-2 mt-lg-1 ms-lg-4 ms-xl-8 ms-2xl-9 gap-lg-x1" data-navbar-nav="data-navbar-nav">
-                    <li class="nav-item"> <a class="nav-link nav-bar-item px-0" href="{{url_for('main.index')}}" title="home">Accueil</a></li>
-                    <li class="nav-item"> <a class="nav-link nav-bar-item px-0" href="{{url_for('main.velos')}}" title="about">Vélos</a></li>
-                    {%if False %}
-                    <li class="nav-item"> <a class="nav-link nav-bar-item px-0" href="#products" title="catalog" >Contact</a></li>
-                    {% endif %}
-                    <li class="nav-item"> <a class="nav-link nav-bar-item px-0" href="{{url_for('booking.dashboard')}}" title="catalog">Tableau de bord</a></li>
-                    {%if admin %}
-                    <li class="nav-item"> <a class="nav-link nav-bar-item px-0" href="{{url_for('admin.admin_tools')}}" title="catalog" style="white-space: nowrap;">Admin</a></li>
-                    {% endif %}
-                  </ul>
+            <nav class="navbar navbar-expand-lg py-1" id="navbar-top" data-navbar-soft-on-scroll="data-navbar-soft-on-scroll">
+                <div class="container"><a class="navbar-brand me-lg-auto cursor-pointer" href=""><img class="w-50 w-md-100 img-fluid" src="{{url_for('static',filename='assets/img/logos/logo.png')}}" alt="" /></a>
+                  <button class="navbar-toggler border-0 pe-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+                  <div class="collapse navbar-collapse" id="navbarSupportedContent" data-navbar-collapse="data-navbar-collapse">
+                    <div class="container d-lg-flex justify-content-lg-end pe-lg-0 w-lg-100">
+                      
+                      <ul class="navbar-nav mt-2 mt-lg-1 ms-lg-4 ms-xl-8 ms-2xl-9 gap-lg-x1" data-navbar-nav="data-navbar-nav">
+                        <li class="nav-item"> <a class="nav-link nav-bar-item px-0" href="{{url_for('main.index')}}" title="home">Accueil</a></li>
+                        <li class="nav-item"> <a class="nav-link nav-bar-item px-0" href="{{url_for('main.velos')}}" title="about">Vélos</a></li>
+                        {% if False %}
+                        <li class="nav-item"> <a class="nav-link nav-bar-item px-0" href="#products" title="catalog" >Contact</a></li>
+                        {% endif %}
+                        <li class="nav-item"> <a class="nav-link nav-bar-item px-0" href="{{url_for('booking.dashboard')}}" title="catalog">Tableau de bord</a></li>
+                      </ul>
+                    </div>
+                  </div>
                 </div>
-                {% if not login %}
-                <a class="btn btn-inscription fs-8 mt-1 d-inline-flex " href = "{{url_for('auth.login')}}"><span>Se connecter</span></a> 
-                <a class="btn btn-inscription fs-8 mt-1 d-inline-flex" href = "{{url_for('auth.signup')}}"><span>S'inscrire</span></a>
-                {% endif %}
-                {% if login %}
-                <a class="btn btn-inscription fs-8 mt-1 d-inline-flex " href = "{{url_for('main.show_profil')}}"><span>{{login}}</span></a> 
-                <a class="btn btn-inscription fs-8 mt-1 d-inline-flex" href = "{{url_for('auth.logout')}}"><span>Se déconnecter</span></a>
-                {% endif %}
+              </nav>
+
+
+
+          <div class="container" data-bs-target="#navbar-top" data-bs-spy="scroll" tabindex="0">
+            
+            
+            
+              
+              
+
+
+
+              
+
+              
+              <h4 class="mb-x1 fs-8 fs-md-7 fs-xxl-6 text-success fw-bold pt-6 mt-3">Gestion des vélos</h4>
+              
+              <div class="d-flex justify-content-center mt-2 justify-content-between">
+                <div>Vélos<div class="H-size-tag ms-3">{{len_velos}}</div></div>
+              
               </div>
+                
+
+              <div class="mb-4 mb-lg-0">
+                <div class="swiper-theme-container position-relative taille">
+                  <div class="swiper-container theme-slider" data-swiper='{"spaceBetween":15,"loop":false,"loopedSlides":5,"breakpoints":{"0":{"slidesPerView":2},"768":{"slidesPerView":4},"1024":{"slidesPerView":5}}}'>
+                    <div class="swiper-wrapper">
+                      {% for i in range(len_velos) %}
+                      <div class="product-card swiper-slide">
+                        <div class="product-card-top" style="background-image: url('static/assets/img/products/products/exVelo.jpeg')">
+                          {% if velos[i]['statut'] == "Disponible" %}
+                          <div class="availability-icon background-vert">{{velos[i]['statut']}}</div>
+                          {% endif %}
+                          {% if velos[i]['statut'] == "Indisponible" %}
+                          <div class="availability-icon background-rouge2">{{velos[i]['statut']}}</div>
+                          {% endif %}
+                          {% if velos[i]['statut'] == "Danger" %}
+                          <div class="availability-icon background-orange">{{velos[i]['statut']}}</div>
+                          {% endif %}
+                        </div>
+                        <div class="d-flex flex-column px-x1 pt-3 product-card-body">
+                          <h3 class="text-success fw-semi-bold line-clamp-1  fs-md-11 ">Vélo {{velos[i]['id_velo']}}</h3>
+                          <p class="text-black fs-10 fs-md-9 mb-0 mb-0">{{velos[i]['longueur']}}</p>
+                          <p class="text-black fs-10 fs-md-9 mb-0 mb-0">{{velos[i]['hauteur']}}</p>
+                          <p class="text-black fs-10 fs-md-9 mb-0 mb-0"></p>
+                          <div class="button-container mt-1">
+                          </div>
+                        </div>
+                      </div>
+                      {% endfor %}
+                    </div>
+
+                  </div>
+                  <div class="slider-nav">
+                    <button class="btn prev-button" data-slider="slider-1"><span class="uil uil-angle-left-b"></span></button>
+                    <button class="btn next-button" data-slider="slider-1"><span class="uil uil-angle-right-b"></span></button>
+                  </div>
+                </div>
+              </div>
+
+
+
             </div>
-          </nav>
-         <div class="container text-center" style="padding-top: 100px; padding-bottom: 100px;">
-            <h2>Votre code de réservation est:</h2>
-            <h1 style="font-size: 72px !important; margin-top: 20px;">{{code}}</h1>
-        </div>
+                
+          </div>    
+                  
+                    
+                  
+                
+              
+             
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+             
+
+
+
+
+
+
+
+
+
+
+
+            
+          <button class="btn scroll-to-top" data-scroll-top="data-scroll-top"><span class="uil uil-angle-up text-white"></span></button>
           <footer class="Footer" style="background-image: url('static/assets/img/illustrations/BOTTOM.png')">
             <div class="pb-x1 px-3 px-lg-0">
               <div class="container">
@@ -163,6 +255,7 @@
     <script src="https://polyfill.io/v3/polyfill.min.js?features=window.scroll"></script>
     <script src="{{url_for('static',filename='vendors/list.js/list.min.js')}}"></script>
     <script src="{{url_for('static',filename='assets/js/theme.js')}}"></script>
+
   </body>
 
 </html>
