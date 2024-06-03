@@ -13,8 +13,9 @@ from .contact_functions import putMessage
 
 
 contact = Blueprint('contact', __name__)
-@login_required
+
 @contact.route('/contact_us', methods = ["GET", "POST"])
+@login_required
 def contact_us():
     if request.method == "POST":
         type = request.form["type"]

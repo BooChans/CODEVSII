@@ -188,7 +188,7 @@ def messages():
     connection = sqlite3.connect('BDD_velos.db')
     cur = connection.cursor()
     cur.row_factory = sqlite3.Row
-    query = "SELECT * FROM Messages M join Membres F on M.id_membre = F.id_membre"
+    query = "SELECT * FROM Messages M join Membres F on M.id_membre = F.id_membre order by M.date desc"
     cur.execute(query)
     messagees = cur.fetchall()
     connection.close()
@@ -202,16 +202,16 @@ def userMessages(id_membre, date):
         date = datetime.datetime.strptime(date, '%Y-%m-%d %H:%M:%S')
         date_lendemain = date + datetime.timedelta(days = 1)
     if not id_membre and not date: 
-        query = "SELECT * FROM Messages M join Membres F on M.id_membre = F.id_membre"
+        query = "SELECT * FROM Messages M join Membres F on M.id_membre = F.id_membre order by M.date desc"
         cur.execute(query)
     elif id_membre and not date:
-        query = "SELECT * FROM Messages M join Membres F on M.id_membre = F.id_membre where M.login = ?"
+        query = "SELECT * FROM Messages M join Membres F on M.id_membre = F.id_membre where M.login = ? M.date desc"
         cur.execute(query, (id_membre,))
     elif not id_membre and date: 
-        query = "SELECT * FROM Messages M join Membres F on M.id_membre = F.id_membre where M.date > ? and M.date < ?"
+        query = "SELECT * FROM Messages M join Membres F on M.id_membre = F.id_membre where M.date > ? and M.date < ? M.date desc"
         cur.execute(query, (date,date_lendemain))   
     elif id_membre and date: 
-        query = "SELECT * FROM Messages M join Membres F on M.id_membre = F.id_membre where M.date > ? and M.date < ? and M.login = ?"
+        query = "SELECT * FROM Messages M join Membres F on M.id_membre = F.id_membre where M.date > ? and M.date < ? and M.login = ? M.date desc"
         cur.execute(query, (date,date_lendemain,id_membre))              
     messagees = cur.fetchall()
     connection.close()
