@@ -57,9 +57,8 @@
                   <ul class="navbar-nav mt-2 mt-lg-1 ms-lg-4 ms-xl-8 ms-2xl-9 gap-lg-x1" data-navbar-nav="data-navbar-nav">
                     <li class="nav-item"> <a class="nav-link nav-bar-item px-0" href="{{url_for('main.index')}}" title="home">Accueil</a></li>
                     <li class="nav-item"> <a class="nav-link nav-bar-item px-0" href="{{url_for('main.velos')}}" title="about">Vélos</a></li>
-                    {%if False %}
-                    <li class="nav-item"> <a class="nav-link nav-bar-item px-0" href="#products" title="catalog" >Contact</a></li>
-                    {% endif %}
+                    <li class="nav-item"> <a class="nav-link nav-bar-item px-0" href="{{url_for('contact.contact_us')}}" title="catalog" >Contact</a></li>
+
                     <li class="nav-item"> <a class="nav-link nav-bar-item px-0" href="{{url_for('booking.dashboard')}}" title="catalog">Tableau de bord</a></li>
                     {%if admin %}
                     <li class="nav-item"> <a class="nav-link nav-bar-item px-0" href="{{url_for('admin.admin_tools')}}" title="catalog" style="white-space: nowrap;">Admin</a></li>
@@ -85,8 +84,8 @@
                   <div class="col-12 col-lg-6">
                     <h1 class="fs-5 fs-md-3 fs-xxl-2 text-black fw-light mb-4"><strong><em>Qui sommes nous?</em></strong></h1>
                     <p class="fs-8 fs-md-11 fs-xxl-7 text-primary mb-5 mb-lg-6 mb-xl-7 fw-light">
-                      Texte d'intro au BDD et à ses initiatives<br>
-                      Brève phrase sur notre groupe CODEV 
+                      Salut à toi, bienvenu sur le site de réservations de vélo du BDD. <br>
+                      Prend part à l'aventure et découvre les magnifiques paysages de la Bretagne! 
                     </p>
                     <button class="btn btn-gradient fs-8 mt-1 d-inline-flex"><span>En savoir plus</span><span class="uil uil-arrow-right"></span></button>
                   </div>
@@ -98,7 +97,7 @@
                     <p class="fs-8 fs-md-11 fs-xxl-7 text-primary mb-5 mb-lg-6 mb-xl-7 fw-light">
                       Connecte toi ou inscris toi en cliquant sur le bouton de réservation.
                     </p>
-                    <button class="btn btn-gradient fs-8 d-inline-flex"><span>Réserver un vélo</span><span class="uil uil-arrow-right"></span></button>
+                    <a class="btn btn-gradient fs-8 d-inline-flex" href = "{{url_for('booking.dashboard')}}"><span>Réserver un vélo</span><span class="uil uil-arrow-right"></span></a>
                   </div>
                   <div class="col-12 col-lg-6 order-0 order-lg-1"><img class="img-fluid w-50 w-lg-100" src="{{url_for('static',filename='assets/img/Hero/planting.png')}}" alt="" /></div>
                 </div>

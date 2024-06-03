@@ -109,8 +109,14 @@ def add_member():
 
 @main.route('/velos')
 def velos():
+    try: 
+        login=current_user.login
+        is_admin = current_user.is_admin
+    except: 
+        login = None
+        is_admin = None
     velos = bikes()
-    return render_template('Velos.html',velos=velos, len_velos=len(velos))
+    return render_template('Velos.html',velos=velos, len_velos=len(velos), login=login, admin=is_admin)
 
 
 @main.route('/profil', methods=('GET','POST'))

@@ -130,10 +130,12 @@ def afficher_historique_user(id_membre):
     connection = sqlite3.connect('BDD_velos.db')
     cur = connection.cursor()
     cur.row_factory = sqlite3.Row
-    cur.execute("SELECT * from Historique WHERE id_membre = ?",(id_membre,))
-    history_u=cur.fetchall()
+    cur.execute("SELECT * from Historique WHERE id_membre = ? ORDER by date_deb DESC",(id_membre,))
+    history_all=cur.fetchall()
+    cur.execute("SELECT * from Historique H where id_membre = ? and not exists(SELECT * from Reservations R where R.id_membre = H.id_membre and R.id_velo = H.id_velo and R.date_deb = H.date_deb)", (id_membre,))
+    history_done = cur.fetchall()
     connection.close()
-    return history_u
+    return history_all,history_done
 
 
 def afficher_historique_bike(id_velo):
@@ -174,4 +176,23 @@ def bikes():
     cur.row_factory = sqlite3.Row
     cur.execute("SELECT * FROM Velos")
     velos = cur.fetchall()
+    connection.close()
     return velos
+
+def given_back(id_membre, id_velo, date_deb):
+    connection = sqlite3.connect('BDD_velos.db')
+    cur = connection.cursor()
+    date_actuelle = datetime.datetime.now().strftime('%Y-%m-%d %X')
+    cur.row_factory = sqlite3.Row
+    cur.execute("UPDATE set date_remise = ? where id_velo = ? and id_velo = ? and date_deb = ?" (date_actuelle,id_membre, id_velo,date_deb))
+    connection.close()
+
+def countNonGivenBack(id_membre):
+    connection = sqlite3.connect('BDD_velos.db')
+    cur = connection.cursor()
+    cur.row_factory = sqlite3.Row
+    cur.execute("SELECT COUNT(*) from Historique H where id_membre = ? and not exists(SELECT * from Reservations R where R.id_membre = H.id_membre and R.id_velo = H.id_velo and R.date_deb = H.date_deb)", (id_membre,))
+    count = cur.fetchone()[0]
+    connection.close()
+    return count
+

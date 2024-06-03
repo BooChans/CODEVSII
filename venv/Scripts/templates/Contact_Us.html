@@ -48,7 +48,7 @@
     <main class="main" id="top">
       <div class="bg-white">
         <div class="content">
-          
+
           <nav class="navbar navbar-expand-lg py-1" id="navbar-top" data-navbar-soft-on-scroll="data-navbar-soft-on-scroll">
             <div class="container"><a class="navbar-brand me-lg-auto cursor-pointer" href=""><img class="w-50 w-md-100 img-fluid" src="{{url_for('static',filename='assets/img/logos/logo.png')}}" alt="" /></a>
               <button class="navbar-toggler border-0 pe-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
@@ -57,7 +57,7 @@
                   
                   <ul class="navbar-nav mt-2 mt-lg-1 ms-lg-4 ms-xl-8 ms-2xl-9 gap-lg-x1" data-navbar-nav="data-navbar-nav">
                     <li class="nav-item"> <a class="nav-link nav-bar-item px-0" href="{{url_for('main.index')}}" title="home">Accueil</a></li>
-                    <li class="nav-item"> <a class="nav-link nav-bar-item px-0" href="#about" title="about">Vélos</a></li>
+                    <li class="nav-item"> <a class="nav-link nav-bar-item px-0" href="{{url_for('main.velos')}}" title="about">Vélos</a></li>
                     <li class="nav-item"> <a class="nav-link nav-bar-item px-0" href="{{url_for('contact.contact_us')}}" title="catalog" >Contact</a></li>
 
                     <li class="nav-item"> <a class="nav-link nav-bar-item px-0" href="{{url_for('booking.dashboard')}}" title="catalog">Tableau de bord</a></li>
@@ -77,85 +77,41 @@
               </div>
             </div>
           </nav>
+
           <div class="container container-inscription" data-bs-target="#navbar-top" data-bs-spy="scroll" tabindex="0">
-    
-            <section class="projects no-padding-top">
-              <div class="container">
-
-                <p class="fs-8 fs-md-7 fs-xxl-6 text-success fw-bold my-0 text-capitalize mt-3 mb-4">Historique des réservations</p>
-                  
-                <form method="POST">
-                  <p class="fs-8 text-capitalize">Pseudonyme</p>
-                  <div class="input-group position-relative">
-                    <input class="form-control email-input" name="login" placeholder="Pseudonyme" />
-                  </div>
-                  <p class="fs-8 text-capitalize">Vélo</p>
-                  <div class="input-group position-relative">
-                    <input class="form-control email-input" name="id_velo" placeholder="Vélo" />
-                  </div>
-                  
-                    <p class="fs-8 text-capitalize">Date</p>
-                    <div class="input-group position-relative">
-                      <input class="form-control email-input" type="datetime-local" name="date">
-                    </div>
-                  
-                  <div class="d-flex justify-content-center mt-5 mb-3">
-                    <button class="btn btn-gradient fs-8 d-inline-flex" type = "submit" name = "action" value = "search"><span>Chercher</span></button>
-                  </div>
-                </form>
-
-                <!-- Project-->
-                <form method="POST">
-                <div class="d-flex mt-2">
-                    <button class="btn btn-resa fs-8 d-inline-flex btn-auto-width px-4 btn-orange me-3 background-Supprimer mb-3" name = "action" value = "delete_all" ><span>Supprimer l'historique</span></button>
-                </div>
-              </form>
-                
-                {% for i in range(len_historique) %}
-                 <!-- Project-->
-                <div class="project">
-                  <div class="row bg-white has-shadow">
-                    <div class="left-col col-lg-6 d-flex align-items-center justify-content-between">
-                      <div class="project-title d-flex align-items-center">
-                        <div class="image has-shadow"><img src="https://bootdey.com/img/Content/avatar/avatar2.png" alt="..." class="img-fluid"></div>
-                        <div class="text">
-                          <h3 class="h4">{{historique[i]['login']}}</h3><small>{{historique[i]['numero_tel']}}</small>
-                        </div>
-                      </div>
-
-                      <div class="project-date"><span class="hidden-sm-down">Vélo {{historique[i]['id_velo']}}<div class="H-size-tag ms-3">S</div></span></div>
-                    </div>
-                    <div class="right-col col-lg-6 d-flex align-items-center">
-                      <div class="project-title d-flex align-items-center">
-                        <div class="text">
-                          <div class="time"><i class="fa fa-clock-o"></i>{{dh_historique[i][0]}}</div>
-                          <div class="time"><i class="fa fa-clock-o"></i>{{dh_historique[i][1]}}</div>
-                        </div>
-                      </div>
-
-                      <div class="project-progress w-100">
-                        <div class="progress">
-                          <div role="progressbar" style="width: 100%; height: 6px;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" class="progress-bar bg-green"></div>
-                        </div>
-                      </div>
-
-                      <div class="project-title d-flex align-items-center">
-                        <div class="text">
-                          <div class="time"><i class="fa fa-clock-o"></i>{{dh_historique[i][2]}}</div>
-                          <div class="time"><i class="fa fa-clock-o"></i>{{dh_historique[i][3]}}</div>
-                        </div>
-                      </div>
-                      
-                    </div>
-                  </div>
-                </div>
-                {% endfor %}
-                
-              </div>
-              </section>        
-
-              
+            
            
+            <section class="mb-9 mb-lg-10 mb-xxl-11 text-center text-lg-start mt-5" id="support">
+              <div class="row g-4 g-lg-6 g-xl-7 pt-6">
+                
+                <div class="col-12 col-lg-6 d-flex flex-column justify-content-center mt-0">
+                  <p class="fs-8 fs-md-7 fs-xxl-6 text-success fw-bold my-0 text-capitalize">Contactez nous</p>
+                  <h1 class="fs-5 fs-lg-4 fs-xl-3 text-secondary text-capitalize fw-light mt-3 mb-4">
+                  <span class="fw-bold">l'aventure</span> vous attend !</h1>
+                  <form method="POST">
+                    <p class="fs-8 text-capitalize">Spécifiez votre message</p>
+                    <select class="mb-3 form-control email-input" name="type">
+                        <option value="" disabled selected>Type</option>
+                        <option value="Question">Question</option>
+                        <option value="Probleme">Probleme</option>
+                        <option value="Autre">Autre</option>
+                    </select>
+                    <p class="fs-8 text-capitalize">Objet</p>
+                    <div class="input-group position-relative">
+                      <input class="form-control email-input" name="titre" placeholder="Objet de votre message" />
+                    </div>
+                    <p class="fs-8 text-capitalize">Message</p>
+                    <div class="input-group position-relative">
+                      <textarea class="form-control email-input" name="message" rows="20" placeholder="Ecrivez votre message"></textarea>
+                    </div>
+                    <div class="d-flex justify-content-center mt-5">
+                      <button class="btn btn-gradient fs-8 d-inline-flex"><span>Valider</span></button>
+                    </div>
+                  </form>
+                </div>
+                <div class="col-12 col-lg-6 order-0 order-lg-1"><img class="img-fluid w-50 w-lg-100" src="{{url_for('static',filename='assets/img/Hero/planting.png')}}" alt="" /></div>
+              </div>
+            </section>
           </div>
           <button class="btn scroll-to-top" data-scroll-top="data-scroll-top"><span class="uil uil-angle-up text-white"></span></button>
           <footer class="Footer" style="background-image: url('static/assets/img/illustrations/BOTTOM.png')">

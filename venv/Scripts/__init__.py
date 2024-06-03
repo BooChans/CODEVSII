@@ -44,6 +44,8 @@ app.register_blueprint(booking_blueprint)
 from .admin import admin as admin_blueprint
 app.register_blueprint(admin_blueprint)
 
+from .contact import contact as contact_blueprint
+app.register_blueprint(contact_blueprint)
     
 app.config['MAIL_DEFAULT_SENDER'] = "noreply@flask.com"
 app.config['MAIL_SERVER'] = "smtp.gmail.com"

@@ -50,3 +50,13 @@ cur.execute("""CREATE TABLE Historique(
     FOREIGN KEY(id_velo) REFERENCES Velos(id_velo),
     FOREIGN KEY(id_membre) REFERENCES Membres(id_membre) 
 )""")
+
+cur.execute("""CREATE TABLE Messages(
+    id_mes INTEGER PRIMARY KEY AUTOINCREMENT,
+    id_membre INTEGER,
+    date DATETIME,
+    message TEXT,
+    titre TEXT,
+    type TEXT,
+    FOREIGN KEY(id_membre) REFERENCES Membres(id_membre) 
+)""")

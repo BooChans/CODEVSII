@@ -11,13 +11,13 @@ char  ReplyBuffer[] = "reconnu";
 
 #include <Keypad.h>
 
-#define L1 8
-#define L2 7
-#define L3 6
+#define L1 3
+#define L2 6
+#define L3 7
 #define L4 5
 #define C1 4
-#define C2 3
-#define C3 2
+#define C2 2
+#define C3 8
 
 const byte lignes = 4;
 const byte colonnes = 3;

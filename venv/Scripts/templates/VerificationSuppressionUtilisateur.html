@@ -50,20 +50,30 @@
         <div class="content">
           
           <nav class="navbar navbar-expand-lg py-1" id="navbar-top" data-navbar-soft-on-scroll="data-navbar-soft-on-scroll">
-            <div class="container"><a class="navbar-brand me-lg-auto cursor-pointer" href=""><img class="w-50 w-md-100 img-fluid" src="assets/img/logos/logo.png" alt="" /></a>
+            <div class="container"><a class="navbar-brand me-lg-auto cursor-pointer" href=""><img class="w-50 w-md-100 img-fluid" src="{{url_for('static',filename='assets/img/logos/logo.png')}}" alt="" /></a>
               <button class="navbar-toggler border-0 pe-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
               <div class="collapse navbar-collapse" id="navbarSupportedContent" data-navbar-collapse="data-navbar-collapse">
                 <div class="container d-lg-flex justify-content-lg-end pe-lg-0 w-lg-100">
                   
                   <ul class="navbar-nav mt-2 mt-lg-1 ms-lg-4 ms-xl-8 ms-2xl-9 gap-lg-x1" data-navbar-nav="data-navbar-nav">
-                    <li class="nav-item"> <a class="nav-link nav-bar-item px-0" href="#home" title="home">Accueil</a></li>
-                    <li class="nav-item"> <a class="nav-link nav-bar-item px-0" href="#about" title="about">Vélos</a></li>
-                    <li class="nav-item"> <a class="nav-link nav-bar-item px-0" href="#products" title="catalog" >Contact</a></li>
-                    <li class="nav-item"> <a class="nav-link nav-bar-item px-0" href="#products" title="catalog" style="white-space: nowrap;">Tableau de bord</a></li>
+                    <li class="nav-item"> <a class="nav-link nav-bar-item px-0" href="{{url_for('main.index')}}" title="home">Accueil</a></li>
+                    <li class="nav-item"> <a class="nav-link nav-bar-item px-0" href="{{url_for('main.velos')}}" title="about">Vélos</a></li>
+                    <li class="nav-item"> <a class="nav-link nav-bar-item px-0" href="{{url_for('contact.contact_us')}}" title="catalog" >Contact</a></li>
+
+                    <li class="nav-item"> <a class="nav-link nav-bar-item px-0" href="{{url_for('booking.dashboard')}}" title="catalog">Tableau de bord</a></li>
+                    {%if admin %}
+                    <li class="nav-item"> <a class="nav-link nav-bar-item px-0" href="{{url_for('admin.admin_tools')}}" title="catalog" style="white-space: nowrap;">Admin</a></li>
+                    {% endif %}
                   </ul>
-                  <button class="btn btn-inscription fs-8 mt-1 d-inline-flex "><span>Se connecter</span></button>  
-                  <button class="btn btn-inscription fs-8 mt-1 d-inline-flex"><span>S'inscrire</span></button>
                 </div>
+                {% if not login %}
+                <a class="btn btn-inscription fs-8 mt-1 d-inline-flex " href = "{{url_for('auth.login')}}"><span>Se connecter</span></a> 
+                <a class="btn btn-inscription fs-8 mt-1 d-inline-flex" href = "{{url_for('auth.signup')}}"><span>S'inscrire</span></a>
+                {% endif %}
+                {% if login %}
+                <a class="btn btn-inscription fs-8 mt-1 d-inline-flex " href = "{{url_for('main.show_profil')}}"><span>{{login}}</span></a> 
+                <a class="btn btn-inscription fs-8 mt-1 d-inline-flex" href = "{{url_for('auth.logout')}}"><span>Se déconnecter</span></a>
+                {% endif %}
               </div>
             </div>
           </nav>
@@ -71,14 +81,15 @@
             
             
            
-           
+           <form method = "post">
             <div class="col-12 col-lg-6 d-flex flex-column justify-content-center mt-4 mb-5 m-auto ">
-                <p>Etes vous sûr de vouloir supprimer ce vélo ?</p>
+                <p>Etes vous sûr de vouloir supprimer cet utilisateur ?</p>
                 <div class="d-flex mt-2">
-                  <button class="btn btn-resa fs-8 d-inline-flex btn-auto-width px-4 btn-orange me-3 background-bleu1"><span>Supprimer ce vélo</span></button>
-                  <button class="btn btn-resa fs-8 d-inline-flex btn-auto-width px-4 btn-orange ms-3 background-rouge2"><span>Abandonner</span></button>
+                  <button class="btn btn-resa fs-8 d-inline-flex btn-auto-width px-4 btn-orange me-3 background-bleu1" type = "submit" name = "action" value="confirm"><span>Supprimer</span></button>
+                  <button class="btn btn-resa fs-8 d-inline-flex btn-auto-width px-4 btn-orange ms-3 background-rouge2" type = "submit" name="action" value="abandon"><span>Abandonner</span></button>
                 </div>
               </div>
+            </form>
             
 
               

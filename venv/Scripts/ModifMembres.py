@@ -30,9 +30,9 @@ def ajouter_membre(login, mdp, mail,numero_tel, registered_on):
         mdp_hache = generate_password_hash(mdp)
         cur.execute("SELECT COUNT(id_membre) FROM Membres")
         c = cur.fetchone()
-        cur.execute("INSERT INTO Membres (id_membre, login, password, mail,numero_tel,registered_on) VALUES (?, ?, ?, ?,?,?)", ((c[0]), login, mdp_hache, mail,numero_tel,registered_on))
+        cur.execute("INSERT INTO Membres (login, password, mail,numero_tel,registered_on) VALUES (?, ?, ?,?,?)", (login, mdp_hache, mail,numero_tel,registered_on))
         connection.commit()
-        print(f"Le membre avec l'identifiant {c[0]+1} a été ajouté avec succès.")
+        print(f"Le membre avec l'identifiant a été ajouté avec succès.")
         connection.close()
 
 def supprimer_membre(login, mdp, mail):
@@ -86,7 +86,6 @@ def affiche_profil(login):
 
 def confirm(mail):
     connection = sqlite3.connect('BDD_velos.db')
-
     cur = connection.cursor()
     confirmed_on = datetime.datetime.now().strftime('%Y-%m-%d %X')
     cur.execute("UPDATE Membres SET confirmed_on = ? , is_confirmed = True WHERE mail = ?", (confirmed_on,mail))

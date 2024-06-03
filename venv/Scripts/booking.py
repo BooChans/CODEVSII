@@ -2,7 +2,7 @@ from flask import Blueprint,render_template, redirect, url_for, request, flash,s
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, logout_user, current_user,login_required
 from .models import Membres
-from .reservations import velos_disponibles,supprimer_reservations_date_depassee, reserver_velo,supprimer_reservation,afficher_code,reservationsencours,afficher_historique_user,codes_list,tableau_de_bord,afficher_code
+from .reservations import velos_disponibles,supprimer_reservations_date_depassee, reserver_velo,supprimer_reservation,afficher_code,reservationsencours,afficher_historique_user,codes_list,tableau_de_bord,afficher_code, given_back, countNonGivenBack
 from flask_session import Session
 from .decorators import confirmed_required
 import socket
@@ -157,6 +157,10 @@ def dashboard():
         date_fin_html = None
     supprimer_reservations_date_depassee() #print la date
     historique,dh_historique,reservations,dh_reservations = tableau_de_bord(current_user.id_membre)
+    count = countNonGivenBack(current_user.login)
+    print(count)
+    if count > 0: 
+        flash("Veuillez confirmer la remise de plusieurs vélos dans l'historique")
     codes=codes_list()
     print(codes)
     s.sendto(bytes("code_deb",'utf-8'),(UDP_PC,UDP_PORT))
@@ -209,11 +213,18 @@ def dashboard():
     #except: 
         #return redirect(url_for('auth.login'))
 
-@booking.route('/history')
+@booking.route('/history', methods=['GET','POST'])
 @login_required
 def history():
-    userHistory = afficher_historique_user(current_user.id_membre)
-    return render_template('Historique.html', userHistory=userHistory,len_userHistory = len(userHistory), login=current_user.login)
+    userHistory, bookingCheck = afficher_historique_user(current_user.id_membre)
+    if request.method == 'POST':
+        action = request.form['action']
+        if action[0] == "given_back":
+            id_velo = action[1]
+            date_deb = action[2]
+            given_back(current_user.id_membre,id_velo,date_deb)
+            return redirect(url_for('booking.history'))
+    return render_template('Historique.html', userHistory=userHistory,len_userHistory = len(userHistory), login=current_user.login, bookingCheck = bookingCheck)
 
 @booking.route('/code')
 @login_required
