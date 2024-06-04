@@ -10,3 +10,6 @@ def Reservationdejaprise(login):
 def Dejareserve():
   raise Exception("Vélo déjà réservé")
 
+def DeltaTemps():
+  raise Exception("Temps de réservation supérieur à 1 an")
+

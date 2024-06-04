@@ -2,7 +2,7 @@ import sqlite3
 import flask
 import random
 import datetime
-from .exceptions import Reservationdejaprise,Dejareserve
+from .exceptions import Reservationdejaprise,Dejareserve, DeltaTemps
 
 connection = sqlite3.connect('BDD_velos.db')
 cur = connection.cursor()
@@ -22,30 +22,35 @@ def reserver_velo(id_velo, id_membre, date_deb,date_end):
     connection = sqlite3.connect('BDD_velos.db')
     cur = connection.cursor()
 
-    
-    cur.execute("SELECT COUNT(*) FROM reservations WHERE id_velo = ? AND date_fin > ? AND date_deb < ?", (id_velo, date_deb, date_end))
-    num_overlapping_reservations = cur.fetchone()[0]
-    
-    if num_overlapping_reservations > 0:
-        print("Ce vélo est déjà réservé pour cette période")
-        connection.close()
-        Dejareserve()
+    date_deb = datetime.datetime.strptime(date_deb, "%Y-%m-%d %X")
+    date_end = datetime.datetime.strptime(date_end, "%Y-%m-%d %X")
+    delta_an = datetime.timedelta(days = 365)
+    if date_deb < date_end and date_end-date_deb < delta_an :
+        cur.execute("SELECT COUNT(*) FROM reservations WHERE id_velo = ? AND date_fin > ? AND date_deb < ?", (id_velo, date_deb, date_end))
+        num_overlapping_reservations = cur.fetchone()[0]
+        
+        if num_overlapping_reservations > 0:
+            print("Ce vélo est déjà réservé pour cette période")
+            connection.close()
+            Dejareserve()
+        else:
+            cur.execute("SELECT COUNT(*) FROM reservations WHERE id_membre = ? and date_deb = ?", (id_membre,date_deb))
+            num_booking = cur.fetchone()[0]
+            cur.execute("SELECT COUNT(*) FROM reservations WHERE id_membre = ?", (id_membre,))
+            num_bookuser = cur.fetchone()[0]
+            if num_booking == 0 and num_bookuser < 2: 
+                cur.execute("INSERT INTO Historique ( id_membre, id_velo, date_deb, date_fin) VALUES ( ?, ?, ?, ?)",
+                            (id_membre, id_velo,  date_deb, date_end))
+                code = generate_unique_code()
+                cur.execute("INSERT INTO Reservations ( id_membre, id_velo, code, date_deb, date_fin) VALUES ( ?, ?, ?, ?, ?)",
+                            (id_membre, id_velo, code,  date_deb,date_end))
+                connection.commit()
+                connection.close()
+            else: 
+                connection.close()
+                Reservationdejaprise(id_membre)
     else:
-        cur.execute("SELECT COUNT(*) FROM reservations WHERE id_membre = ? and date_deb = ?", (id_membre,date_deb))
-        num_booking = cur.fetchone()[0]
-        cur.execute("SELECT COUNT(*) FROM reservations WHERE id_membre = ?", (id_membre,))
-        num_bookuser = cur.fetchone()[0]
-        if num_booking == 0 and num_bookuser < 2: 
-            cur.execute("INSERT INTO Historique ( id_membre, id_velo, date_deb, date_fin) VALUES ( ?, ?, ?, ?)",
-                        (id_membre, id_velo,  date_deb, date_end))
-            code = generate_unique_code()
-            cur.execute("INSERT INTO Reservations ( id_membre, id_velo, code, date_deb, date_fin) VALUES ( ?, ?, ?, ?, ?)",
-                        (id_membre, id_velo, code,  date_deb,date_end))
-            connection.commit()
-            connection.close()
-        else: 
-            connection.close()
-            Reservationdejaprise(id_membre)
+        DeltaTemps()
 
             
 
@@ -184,7 +189,7 @@ def given_back(id_membre, id_velo, date_deb):
     cur = connection.cursor()
     date_actuelle = datetime.datetime.now().strftime('%Y-%m-%d %X')
     cur.row_factory = sqlite3.Row
-    cur.execute("UPDATE set date_remise = ? where id_velo = ? and id_velo = ? and date_deb = ?" (date_actuelle,id_membre, id_velo,date_deb))
+    cur.execute("UPDATE set date_remise = ? where id_velo = ? and id_velo = ? and date_deb = ?" ,(date_actuelle,id_membre, id_velo,date_deb))
     connection.close()
 
 def countNonGivenBack(id_membre):

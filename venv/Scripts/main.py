@@ -9,6 +9,7 @@ from flask_session import Session
 from .reservations import reserver_velo,supprimer_reservation,afficher_code,supprimer_reservations_date_depassee,velos_disponibles,tableau_de_bord,bikes
 import datetime
 from .models import Membres
+from .decorators import admin_required
 
 
 main = Blueprint('main', __name__)
@@ -125,6 +126,7 @@ def show_profil():
         return render_template('aff_prof.html', profil=profil)
 
 @main.route('/profile',methods=['GET','POST'])
+@admin_required
 def profile():
     #try: 
 

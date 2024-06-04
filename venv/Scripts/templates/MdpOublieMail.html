@@ -72,12 +72,19 @@
             
            
             <section class="mb-9 mb-lg-10 mb-xxl-11 text-center text-lg-start mt-5" id="support">
+              {% with messages = get_flashed_messages() %}
+              {% if messages %}
+              <p class="fs-8 fs-md-11 fs-xxl-7 text-primary mb-5 mb-lg-6 mb-xl-7 fw-light">
+                {{ messages[0] }}.
+              </p>
+              {% endif %}
+              {% endwith %}
               <div class="row g-4 g-lg-6 g-xl-7 pt-6">
                 <div class="d-none d-lg-block col-lg-6 text-center"><img class="img-fluid" src="{{url_for('static',filename='assets/img/illustrations/women_watering.png')}}" /></div>
                 <div class="col-12 col-lg-6 d-flex flex-column justify-content-center mt-0">
-                  <p class="fs-8 fs-md-7 fs-xxl-6 text-success fw-bold my-0 text-capitalize">Rejoignez la communauté</p>
+                  <p class="fs-8 fs-md-7 fs-xxl-6 text-success fw-bold my-0 text-capitalize">Mot de passe oublié ?</p>
                   <h1 class="fs-5 fs-lg-4 fs-xl-3 text-secondary text-capitalize fw-light mt-3 mb-4">
-                  <span class="fw-bold">l'aventure</span> vous attend !</h1>
+                  <span class="fw-bold">Aucun soucis !</span> </h1>
                   
                   <form method="POST" >
                     <p class="fs-8 text-capitalize">Adresse mail</p>

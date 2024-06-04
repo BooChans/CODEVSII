@@ -195,7 +195,7 @@ def dashboard():
                 del session['date_fin']
                 return render_template('ReservationReussie.html',date=date)
             except: 
-                flash("Vélo réservé à cette date ou vous avez déjà deux réservations actives")
+                flash("Vélo réservé à cette date ou vous avez déjà deux réservations actives ou durée de réservation supérieure à 1 an")
                 del session['date_deb']
                 del session['date_fin']
                 return redirect(url_for('booking.dashboard'))

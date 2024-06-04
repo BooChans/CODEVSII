@@ -79,6 +79,7 @@ def signup():
             html = render_template('confirm_mail.html', confirm_url=confirm_url)
             subject = "Confirmez votre mail"
             send_email(mail,subject,html)
+            flash("Confirmez votre boîte pour confirmer votre identité")
             return redirect(url_for('main.index'))
             #except: 
                 #flash("Le pseudonyme ou l'adresse mail ou le numéro de téléphone saisi est déjà utilisé")
@@ -152,15 +153,20 @@ def forgottenpassword():
         mail = request.form['mail']
         if not login: 
             flash('Le login est nécessaire')
-        user = Membres.query.filter_by(mail=mail).first_or_404()
+        try:
+            user = Membres.query.filter_by(mail=mail).first_or_404()
+        except:
+            user = None
         if not user: 
             flash("Le profil n'existe pas")
+            return redirect(url_for('auth.forgottenpassword'))
         else: 
             token = generate_token(user.mail)
             confirm_url = url_for('auth.forgottenpasswordconfirm', token=token, _external=True)
             html = render_template('confirm_password.html', confirm_url=confirm_url)
             subject = "Réinitialiser votre mot de passe"
-            send_email(user.mail, subject, html)   
+            send_email(user.mail, subject, html)  
+            flash("Consultez votre boîte mail pour continuer la procédure de changement de mot de passe") 
         return redirect(url_for('main.index'))
     return render_template('MdpOublieMail.html')
 
