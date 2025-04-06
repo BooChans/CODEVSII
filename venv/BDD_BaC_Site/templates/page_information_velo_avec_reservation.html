@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h2>{% block title %} {{ velo['id_velo'] }} {% endblock %}</h2>
+    <span class="badge badge-primary"> Hauteur : {{ velo['hauteur'] }}</span>
+    <span class="badge badge-primary">Longueur : {{ velo['longueur'] }}</span>
+
+    <p>Joli vélo</p>
+
+
+    <form method="post">
+        <div class="form-group">
+        <button class="btn btn-primary" type="submit" name="action" value="book {{velo['id_velo']}} {{date}}">Réserver</button>
+        </div>
+    </form>
+
+
+{% endblock %}

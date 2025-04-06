@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>{% block title %} Liste des vélos {% endblock %}</h1>
+    {% for i in range(len)%}
+        <a href="{{url_for('main.index')}}{{velos[i]['id_velo']}}">
+            <h2>{{ velos[i]['id_velo'] }}</h2>
+        </a>
+        <span class="badge badge-primary">{{ velos[i]['hauteur'] }}</span>
+        <span class="badge badge-primary">{{ velos[i]['longueur'] }}</span>
+        <hr>
+        <form method = "post">
+        <div class="form-group">
+            <button class="btn btn-primary" name = "action" type="submit" value="book {{velos[i]['id_velo']}} {{date_deb}} {{date_fin}}">Réserver</button>
+        </div>
+    </form>
+    {% endfor %}
+{% endblock %}
+

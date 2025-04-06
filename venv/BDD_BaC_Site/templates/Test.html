@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Votre titre</title>
+  <!-- Inclure le fichier CSS de Bootstrap -->
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Ajoutez vos propres styles CSS ici -->
+  <style>
+    /* Vos styles personnalisés ici */
+    .form-control {
+      appearance: none; /* Supprimer l'apparence par défaut du navigateur */
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      background-image: url('assets/arrow-down.png'); /* Ajouter une image de fond personnalisée */
+      background-repeat: no-repeat;
+      background-position: right 8px center; /* Positionner l'image de fond */
+      padding-right: 30px; /* Ajouter un padding à droite pour laisser de l'espace à l'image de fond */
+      cursor: pointer; /* Définir le curseur comme pointer */
+      border-radius: 0; /* Supprimer la bordure arrondie */
+    }
+
+    .form-control option {
+      padding: 10px 20px; /* Ajouter un padding aux options pour les rendre cliquables sur toute leur surface */
+      background-color: red; /* Fond rouge pour les options */
+      color: white; /* Texte blanc pour les options */
+      margin-bottom: 5px; /* Espace entre les options */
+    }
+
+    .mb-3 {
+      margin-bottom: 1rem; /* C'est la taille moyenne de la marge ajoutée */
+    }
+  </style>
+</head>
+<body>
+  <div class="container mt-5">
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+        <!-- Formulaire avec un menu déroulant Bootstrap -->
+        <form>
+          <div class="form-group">
+            <!-- Ajouter une classe "mb-3" pour la marge inférieure -->
+            <select class="mb-3 form-control email-input" name="taille" id="taille"> 
+              <option value="">-- Choisissez une taille --</option>
+              <option value="S">Petit</option>
+              <option value="M">Moyen</option>
+              <option value="L">Grand</option>
+            </select>
+          </div>
+          <button type="submit" class="btn btn-primary">Envoyer</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Inclure le fichier JavaScript de Bootstrap si nécessaire -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+    <div class="badge badge-primary">
+        {{ messages[0] }}.
+    </div>
+{% endif %}
+{% endwith %}
+
+<h1>{% block title %} Vos informations {{ login }}{% endblock %}</h1>
+<span class="badge badge-primary"> Login : {{ login }}</span>
+<span class="badge badge-primary"> Mail : {{ mail }}</span>
+<span class="badge badge-primary"> Numéro de téléphone : {{ numero_tel }}</span>
+<div>
+    <a class="btn btn-primary" href="{{ url_for('auth.changepassword') }}" role = "button">Changer son mot de passe</a>
+</div>
+{% endblock %}

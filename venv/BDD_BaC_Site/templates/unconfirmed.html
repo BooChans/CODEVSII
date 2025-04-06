@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>Bienvenu!</h1>
+<br>
+<p>Vous n'avez pas confirmé votre addresse mail. Veuillez regarder votre boîte mail (ainsi que vos spams). Vous devriez avoir reçu un email avec un lien de confirmation</p>
+<p>Vous n'avez pas reçu le mail ? <a href="{{ url_for('auth.resend_confirmation') }}" class="btn btn-primary">Renvoyer</a></p>
+
+{% endblock %}

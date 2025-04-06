@@ -11,6 +11,7 @@ codes={}
 UDP_IP = "192.168.43.129"
 UDP_PC_P40 = "192.168.43.84"
 UDP_PC = "10.22.29.2"
+UDP_TEST = "127.0.0.1"
 
 UDP_PORT = 2390
 s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)  # UDP   
@@ -19,7 +20,7 @@ while True:
     data,addr=s.recvfrom(1024)
     data=str(data,"utf-8")
     print(data,addr[0])
-    if addr[0]=='192.168.43.84':
+    if addr[0]==UDP_TEST:   #'192.168.43.84'
         if data == "code_deb":
             received_codes=[]
         elif data == "code_fin":
@@ -31,9 +32,11 @@ while True:
             id_velo = int(data[0])
             code = int(data[1])
             date_deb = data[2]+ " "+data[3]
+            date_fin = data[4]+ " "+data[5]
             received_codes.append(code)
             if code not in codes:
-                codes[code]=(id_velo,0,date_deb)
+                codes[code]=(id_velo,0,date_deb, date_fin)
+    print(codes)
     if addr[0] == '192.168.43.129':
         try:
             code = int(data)

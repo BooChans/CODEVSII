@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h2>{% block title %} {{ post['title'] }} {% endblock %}</h2>
+    <span class="badge badge-primary">{{ post['created'] }}</span>
+    <p>{{ post['content'] }}</p>
+
+    <a class="btn btn-primary" href="{{ url_for('auth.changepassword') }}" role = "button">Réserver</a>
+{% endblock %}

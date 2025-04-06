@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+    <div class="badge badge-primary">
+        {{ messages[0] }}. 
+    </div>
+{% endif %}
+{% endwith %}
+
+
+{% block content %}
+<h1>{% block title %} Choisir une date de réservation {{ login }}{% endblock %}</h1>
+<form method="post">
+<label for="date">Date de début</label>
+<input type="datetime-local" id="date_deb" class="form-control" type="date" name="date_deb" />
+<label for="date">Date de fin</label>
+<input type="datetime-local" id="date_fin" class="form-control" type="date" name="date_fin" />
+<div class="form-group">
+    <button type="submit" class="btn btn-primary">Valider</button>
+</div>
+</form>
+{% endblock %}

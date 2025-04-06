@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>{% block title %} Ajouter un nouveau vélo {% endblock %}</h1>
+
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+    <div class="badge badge-primary">
+        {{ messages[0] }}. 
+    </div>
+{% endif %}
+{% endwith %}
+
+<form method="post">
+
+    <div class="form-group">
+        <label for="title">Longueur</label>
+        <input type="text" name="longueur"
+               placeholder="Longueur" class="form-control"></input>
+    </div>
+
+    <div class="form-group">
+        <label for="title">Hauteur</label>
+        <input type="text" name="hauteur"
+               placeholder="Hautuer" class="form-control"></input>
+    </div>
+
+    <div class="form-group">
+        <label for="title">Etat</label>
+        <input type="text" name="status"
+               placeholder="Etat" class="form-control"></input>
+    </div>
+
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary">Ajouter</button>
+    </div>
+</form>
+{% endblock %}
